@@ -2,7 +2,7 @@
 
 int main(void){
 
-	const int screenWidth = 1000;
+	const int screenWidth = 1400;
 	const int screenHeight = 1000;
 	InitWindow(screenWidth, screenHeight, "Ejemplo Basico Raylib 4.0.0");
 	
