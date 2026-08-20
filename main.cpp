@@ -1,22 +1,16 @@
 #include "raylib.h"
 
-int main(void)
-{
-	// 1. Inicializar la ventana
-	const int screenWidth = 800;
-	const int screenHeight = 850;
+int main(void){
+
+	const int screenWidth = 1000;
+	const int screenHeight = 1000;
 	InitWindow(screenWidth, screenHeight, "Ejemplo Basico Raylib 4.0.0");
 	
-	// 2. Fijar los fotogramas por segundo (FPS)
+
 	SetTargetFPS(60);
 	
-	// 3. Bucle principal del juego
-	while (!WindowShouldClose()) // Detecta si se presiona ESC o el botón de cerrar
-	{
-		// Actualización (Lógica del juego)
-		// Aquí puedes actualizar variables, posiciones, etc.
-		
-		// Dibujo
+	while (!WindowShouldClose()){
+
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		
@@ -26,7 +20,6 @@ int main(void)
 		EndDrawing();
 	}
 	
-	// 4. Cerrar y liberar recursos de la ventana
 	CloseWindow();
 	
 	return 0;
