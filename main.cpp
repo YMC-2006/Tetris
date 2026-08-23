@@ -2,13 +2,15 @@
 #include "Pantalla.cpp"
 
 Pantalla pantallaActual = MENU;
-
+Texture2D fondo;
 void cargarTexturas(){
 	
 }
 
 
 void mostrarMenu(){
+	
+	DrawTexture(fondo, 0, 0, WHITE);
 	
 	Rectangle btnJugar = {600, 500, 200, 60};
 	Rectangle btnCreditos = {600, 600, 200, 60};
@@ -66,13 +68,18 @@ void mostrarMenu(){
 	
 }
 
-
-void mostrarJuego(){
-	DrawText("TETRIS", 300, 500, 30, BLUE);
-	
+void regresarAlMenu(){
+	Rectangle btnRegresar = {300, 200, 20, 20};
+	DrawRectangleRec(btnRegresar, BLUE);
+	Vector2 mouse = GetMousePosition();
+	if(CheckCollisionPointRec(mouse, btnRegresar) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		TraceLog(LOG_INFO, "Regresando al menu...");
+		pantallaActual = MENU;
+	}
 }
 
 void mostrarPuntuaciones(){
+	regresarAlMenu();
 	DrawText("Mejores Puntuaciones", 500, 200, 40, BLUE);
 	
 }
@@ -80,17 +87,26 @@ void mostrarPuntuaciones(){
 
 	
 void mostrarCreditos(){
+	regresarAlMenu();
 	DrawText("Creditos", 500, 200, 40, BLUE);
 }
 
+
 	
+void mostrarJuego(){
 	
+	regresarAlMenu(); // dibuja el boton de regresar y si lo clickeo me tira al menu
+	DrawText("TETRIS", 300, 500, 30, BLUE);
+}
+	
+		
+		
 void iniciarJuego(){
 	const int screenWidth = 1400;
 	const int screenHeight = 1000;
 		
 	InitWindow(screenWidth, screenHeight, "Inicio Tetris");
-		
+	fondo = LoadTexture("Assets/fondo.png");
 		
 	// bucle del juego
 	while (!WindowShouldClose()){
