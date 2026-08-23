@@ -1,6 +1,13 @@
 #include "raylib.h"
 #include "Pantalla.cpp"
 
+Pantalla pantallaActual = MENU;
+
+void cargarTexturas(){
+	
+}
+
+
 void mostrarMenu(){
 	
 	Rectangle btnJugar = {600, 500, 200, 60};
@@ -11,18 +18,19 @@ void mostrarMenu(){
 	Vector2 mouse = GetMousePosition();
 	if(CheckCollisionPointRec(mouse, btnJugar)&& IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Jugar Presionado");
+		pantallaActual = JUEGO;
+		
 	}
 	
 	if (CheckCollisionPointRec(mouse, btnCreditos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Creditos presionado");
+		pantallaActual = CREDITOS;
 	}
 	
 	if(CheckCollisionPointRec(mouse, btnMejoresPts) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Mejores pts presionado");
+		pantallaActual = PUNTUACIONES;
 	}
-	
-	
-	ClearBackground(RAYWHITE);
 	
 	DrawRectangleRec(btnJugar, BLUE);
 	DrawRectangleRec(btnCreditos, BLUE);
@@ -60,38 +68,26 @@ void mostrarMenu(){
 
 
 void mostrarJuego(){
-	
-	
+	DrawText("TETRIS", 300, 500, 30, BLUE);
 	
 }
 
 void mostrarPuntuaciones(){
+	DrawText("Mejores Puntuaciones", 500, 200, 40, BLUE);
 	
 }
 
 
 	
 void mostrarCreditos(){
-	
+	DrawText("Creditos", 500, 200, 40, BLUE);
 }
-	
-void mostrarPantallaActual(Pantalla pantallaActual){
-	if(pantallaActual == MENU){
-		mostrarMenu();
-	}else if(pantallaActual == PUNTUACIONES){
-		mostrarPuntuaciones();
-	}else if(pantallaActual == JUEGO){
-		mostrarJuego();
-	}else if(pantallaActual == CREDITOS){
-		mostrarCreditos();
-	}
-}
+
 	
 	
-	
-void iniciarJuego(Pantalla pantallaActual){
+void iniciarJuego(){
 	const int screenWidth = 1400;
-	const int screenHeight = 800;
+	const int screenHeight = 1000;
 		
 	InitWindow(screenWidth, screenHeight, "Inicio Tetris");
 		
@@ -99,7 +95,20 @@ void iniciarJuego(Pantalla pantallaActual){
 	// bucle del juego
 	while (!WindowShouldClose()){
 		BeginDrawing();
-		mostrarPantallaActual(pantallaActual);
+		ClearBackground(RAYWHITE);
+		
+		if(pantallaActual == MENU){
+			mostrarMenu();
+		}else if(pantallaActual == PUNTUACIONES){
+			mostrarPuntuaciones();
+		}else if(pantallaActual == JUEGO){
+			mostrarJuego();
+		}else if(pantallaActual == CREDITOS){
+			mostrarCreditos();
+		}
+		
+		
+		
 		EndDrawing();
 	}
 		
@@ -109,8 +118,8 @@ void iniciarJuego(Pantalla pantallaActual){
 	
 int main(void){
 	
-	Pantalla pantallaActual = MENU;
-	iniciarJuego(pantallaActual);
+	
+	iniciarJuego();
 	
 	return 0;
 }
