@@ -3,10 +3,9 @@
 
 Pantalla pantallaActual = MENU;
 Texture2D fondo;
-void cargarTexturas(){
-	
-}
-
+Texture2D fondoCreditos;
+Music musica;
+bool musicaActiva = false;
 
 void mostrarMenu(){
 	
@@ -15,7 +14,8 @@ void mostrarMenu(){
 	Rectangle btnJugar = {600, 500, 200, 60};
 	Rectangle btnCreditos = {600, 600, 200, 60};
 	Rectangle btnMejoresPts = {570, 700, 290, 60};
-	
+	Rectangle btnSonidoOn = {100, 100, 30, 30};
+	Rectangle btnSonidoOff = {100, 100, 30, 30};
 	
 	Vector2 mouse = GetMousePosition();
 	if(CheckCollisionPointRec(mouse, btnJugar)&& IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -34,11 +34,20 @@ void mostrarMenu(){
 		pantallaActual = PUNTUACIONES;
 	}
 	
-	DrawRectangleRec(btnJugar, BLUE);
-	DrawRectangleRec(btnCreditos, BLUE);
-	DrawRectangleRec(btnMejoresPts, BLUE);
+	if(CheckCollisionPointRec(mouse, btnSonidoOn) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		DrawRectangleRec(btnSonidoOn, BLUE);
+		if(musicaActiva){
+			StopMusicStream(musica);
+			musicaActiva = false;
+		}else{
+			PlayMusicStream(musica);
+			musicaActiva = true;
+		}
+	}else{
+		DrawRectangleRec(btnSonidoOn, DARKBLUE);
+	}
 	
-	
+	// Hover
 	if (CheckCollisionPointRec(mouse, btnJugar)){
 		DrawRectangleRec(btnJugar, DARKBLUE);
 	}
@@ -80,15 +89,16 @@ void regresarAlMenu(){
 
 void mostrarPuntuaciones(){
 	regresarAlMenu();
-	DrawText("Mejores Puntuaciones", 500, 200, 40, BLUE);
+	DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
 	
 }
 
 
 	
 void mostrarCreditos(){
+	DrawTexture(fondoCreditos, 0, 0, WHITE);
 	regresarAlMenu();
-	DrawText("Creditos", 500, 200, 40, BLUE);
+	DrawText("Creditos", 500, 50, 40, BLUE);
 }
 
 
@@ -96,9 +106,15 @@ void mostrarCreditos(){
 void mostrarJuego(){
 	
 	regresarAlMenu(); // dibuja el boton de regresar y si lo clickeo me tira al menu
-	DrawText("TETRIS", 300, 500, 30, BLUE);
+	DrawText("TETRIS", 500, 50, 30, BLUE);
 }
+
+void cargarAssets(){
+	fondo = LoadTexture("assets/fondo.png");
+	fondoCreditos = LoadTexture("assets/creditosFondo.png");
+	musica = LoadMusicStream("assets/FrozenPines.wav");
 	
+}
 		
 		
 void iniciarJuego(){
@@ -106,10 +122,17 @@ void iniciarJuego(){
 	const int screenHeight = 1000;
 		
 	InitWindow(screenWidth, screenHeight, "Inicio Tetris");
-	fondo = LoadTexture("Assets/fondo.png");
+	InitAudioDevice();
+	cargarAssets();
+	musica.looping = true;
+	
+	
 		
 	// bucle del juego
 	while (!WindowShouldClose()){
+		//musica cuando presiono el btn de sound 
+		UpdateMusicStream(musica);
+		
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		
@@ -124,10 +147,13 @@ void iniciarJuego(){
 		}
 		
 		
-		
 		EndDrawing();
 	}
 		
+	
+	// Liberar
+	UnloadMusicStream(musica);
+	CloseAudioDevice();
 	CloseWindow();
 }
 
