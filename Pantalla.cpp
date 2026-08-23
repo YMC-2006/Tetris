@@ -1,0 +1,3 @@
+enum Pantalla{
+	MENU, JUEGO, PUNTUACIONES, OPCIONES, CREDITOS
+};
