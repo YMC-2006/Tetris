@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "Pantalla.cpp"
+#include "Puntaje.h"
 
 Pantalla pantallaActual = MENU;
 Texture2D fondo;
@@ -34,8 +35,9 @@ void mostrarMenu(){
 		pantallaActual = PUNTUACIONES;
 	}
 	
+	// SONIDO
 	if(CheckCollisionPointRec(mouse, btnSonidoOn) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-		DrawRectangleRec(btnSonidoOn, BLUE);
+		
 		if(musicaActiva){
 			StopMusicStream(musica);
 			musicaActiva = false;
@@ -43,8 +45,12 @@ void mostrarMenu(){
 			PlayMusicStream(musica);
 			musicaActiva = true;
 		}
-	}else{
+	}
+	
+	if(musicaActiva){
 		DrawRectangleRec(btnSonidoOn, DARKBLUE);
+	}else{
+		DrawRectangleRec(btnSonidoOn, BLUE);
 	}
 	
 	// Hover
@@ -57,7 +63,7 @@ void mostrarMenu(){
 	DrawText("Jugar", 660, 520, 20, WHITE);
 	
 	
-	
+	// Hover
 	if (CheckCollisionPointRec(mouse, btnCreditos)){
 		DrawRectangleRec(btnCreditos, DARKBLUE);
 	}
@@ -66,7 +72,7 @@ void mostrarMenu(){
 	}
 	DrawText("Creditos", 650, 620, 20, WHITE);
 	
-	
+	// Hover
 	if(CheckCollisionPointRec(mouse, btnMejoresPts)){
 		DrawRectangleRec(btnMejoresPts, DARKBLUE);
 	}else{
@@ -74,6 +80,7 @@ void mostrarMenu(){
 	}
 	DrawText("Mejores Puntuaciones", 600, 720, 20, WHITE);
 	//                                x    y   font size
+
 	
 }
 
@@ -90,6 +97,28 @@ void regresarAlMenu(){
 void mostrarPuntuaciones(){
 	regresarAlMenu();
 	DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
+	
+	Puntaje jugadores[10] = {
+		{"Carlos", 1500},
+		{"Ana", 1300},
+		{"Pedro", 1200},
+		{"Maria", 1100},
+		{"Luis", 1000},
+		{"Sofia", 900},
+		{"Diego", 800},
+		{"Laura", 700},
+		{"Juan", 600},
+		{"Elena", 500}
+	};
+	
+	
+	DrawText("NOMBRE", 500, 180, 20, BLACK);
+	DrawText("PUNTAJE", 800, 180, 20, BLACK);
+	
+	for(int i = 0; i < 10;i++){
+		DrawText(jugadores[i].nombre, 500, 220 + i * 40, 20, BLACK);
+		DrawText(TextFormat("%d",jugadores[i].cantidadPuntos), 800, 220 + i * 40, 20, BLACK );
+	}
 	
 }
 
@@ -154,9 +183,16 @@ void iniciarJuego(){
 	// Liberar
 	UnloadMusicStream(musica);
 	CloseAudioDevice();
+	
+	UnloadTexture(fondo);
+	UnloadTexture(fondoCreditos);
+	
 	CloseWindow();
 }
 
+	
+
+	
 	
 int main(void){
 	
