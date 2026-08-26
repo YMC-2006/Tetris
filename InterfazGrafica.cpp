@@ -1,6 +1,6 @@
 #include "InterfazGrafica.h"
 
-InterfazGrafica::InterfazGrafica(int ancho, int alto, char* titulo){
+InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	anchoPantalla = ancho;
 	altoPantalla = alto;
 	InitWindow(anchoPantalla, altoPantalla, titulo);
@@ -16,8 +16,9 @@ InterfazGrafica::~InterfazGrafica(){
 }
 	
 void InterfazGrafica::cargarAssets(){
-	fondo = LoadTexture("assets/fondo.png");
+	fondo = LoadTexture("assets/fondoMenu.png");
 	fondoCreditos = LoadTexture("assets/creditosFondo.png");
+	fondoRegistroJugador = LoadTexture("assets/fondoRegistroJugador.png");
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
 	
@@ -27,13 +28,57 @@ void InterfazGrafica::liberarAssets(){
 	UnloadTexture(fondoCreditos);
 }
 	
+
+
+void InterfazGrafica::registrarJugador(){
+	
+	DrawTexture(fondoRegistroJugador, 0, 0, WHITE);
+	DrawText("TETRIS", 600, 20, 50, PINK);
+	
+	Color rosadoClaro = {255, 182, 193, 255};
+	Color rosadoOscuro = {219, 112, 147, 255};
+	
+	DrawText("Ingresa tu nombre: ", 500, 350, 30, BLACK);
+	
+	Rectangle cajaTexto = {500, 550, 330, 50};
+	DrawRectangleRec(cajaTexto, rosadoClaro);
+	DrawRectangleLinesEx(cajaTexto, 2, rosadoOscuro);
+	
+	
+	int tecla = GetCharPressed();
+	while(tecla > 0){
+		if(tecla >= 32 && tecla <= 125 && jugadorActual.nombre.length() < 15){
+			jugadorActual.nombre += (char)tecla;
+		}
+		tecla = GetCharPressed();
+	}
+	
+	if(IsKeyPressed(KEY_BACKSPACE) && !jugadorActual.nombre.empty()){
+		jugadorActual.nombre.pop_back();
+	}
+	
+	DrawText(jugadorActual.nombre.c_str(), (int)cajaTexto.x + 10, (int)cajaTexto.y + 12, 20, BLACK);
+	DrawText("Presiona ENTER para continuar", 500, 420, 20, rosadoOscuro);
+	
+	if(IsKeyPressed(KEY_ENTER) && !jugadorActual.nombre.empty()){
+		pantallaActual = MENU;
+	}
+
+}
+
+
 void InterfazGrafica::mostrarMenu(){
 		
 	DrawTexture(fondo, 0, 0, WHITE);
 	
-	Rectangle btnJugar = {600, 500, 200, 60};
-	Rectangle btnCreditos = {600, 600, 200, 60};
-	Rectangle btnMejoresPts = {570, 700, 290, 60};
+	Color rosadoClaro = {251, 181, 212, 255};
+	Color naranjaClaro = {251, 188, 117, 255};
+	Color verdeLimaClaro = {211, 221, 120, 255};
+	Color aquaClaro = {175, 221, 218, 255};
+	
+	Rectangle btnJugar = {600, 500, 260, 60};
+	Rectangle btnCreditos = {605, 600, 250, 60};
+	Rectangle btnMejoresPts = {540, 700, 380, 60};
 	Rectangle btnSonidoOn = {100, 100, 30, 30};
 		
 	Vector2 mouse = GetMousePosition();
@@ -73,25 +118,25 @@ void InterfazGrafica::mostrarMenu(){
 	if (CheckCollisionPointRec(mouse, btnJugar)){
 		DrawRectangleRec(btnJugar, DARKBLUE);
 	}else{
-		DrawRectangleRec(btnJugar, BLUE);
+		DrawRectangleRec(btnJugar, rosadoClaro);
 	}
-	DrawText("Jugar", 660, 520, 20, WHITE);
+	DrawText("Jugar", 670, 520, 30, WHITE);
 	
 	// Hover
 	if (CheckCollisionPointRec(mouse, btnCreditos)){
 		DrawRectangleRec(btnCreditos, DARKBLUE);
 	}else{
-		DrawRectangleRec(btnCreditos, BLUE);
+		DrawRectangleRec(btnCreditos, naranjaClaro);
 	}
-	DrawText("Creditos", 650, 620, 20, WHITE);
+	DrawText("Creditos", 650, 620, 30, WHITE);
 
 		// Hover
 	if(CheckCollisionPointRec(mouse, btnMejoresPts)){
 		DrawRectangleRec(btnMejoresPts, DARKBLUE);
 	}else{
-		DrawRectangleRec(btnMejoresPts, BLUE);
+		DrawRectangleRec(btnMejoresPts, verdeLimaClaro);
 	}
-	DrawText("Mejores Puntuaciones", 600, 720, 20, WHITE);
+	DrawText("Mejores Puntuaciones", 600, 720, 25, WHITE);
 }
 	
 	void InterfazGrafica::regresarAlMenu(){
@@ -132,7 +177,7 @@ void InterfazGrafica::mostrarMenu(){
 		DrawText("PUNTAJE", 800, 180, 20, BLACK);
 			
 		for(int i = 0; i < 10; i++){
-			DrawText(jugadores[i].nombre, 500, 220 + i * 40, 20, BLACK);
+			DrawText(jugadores[i].nombre.c_str(), 500, 220 + i * 40, 20, BLACK);
 			DrawText(TextFormat("%d", jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK);
 		}
 	}
@@ -154,9 +199,13 @@ void InterfazGrafica::ejecutar(){
 	
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
-
+	
+		jugadorActual.puntaje = 0;
+		
 		if(pantallaActual == MENU){
 			mostrarMenu();
+		}else if(pantallaActual == REGISTRO_JUGADOR){
+			registrarJugador();
 		}else if(pantallaActual == PUNTUACIONES){
 			mostrarPuntuaciones();
 		}else if(pantallaActual == JUEGO){

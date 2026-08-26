@@ -1,8 +1,10 @@
 #ifndef JUGADOR_H
-#define JUGADOR_J
+#define JUGADOR_H
+#include <string>
+using namespace std;
 
 struct Jugador{
-	char nombre[30];
+	string nombre;
 	int puntaje;
 };
 

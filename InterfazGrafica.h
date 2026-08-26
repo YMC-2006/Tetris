@@ -7,16 +7,19 @@
 class InterfazGrafica {
 	
 private:
+	Jugador jugadorActual;
 	int anchoPantalla, altoPantalla;
-	Pantalla pantallaActual = MENU;
+	Pantalla pantallaActual = REGISTRO_JUGADOR;
 	Texture2D fondo;
 	Texture2D fondoCreditos;
+	Texture2D fondoRegistroJugador;
 	Music musica;
 	bool musicaActiva = false;
 	
 	void cargarAssets();
 	void liberarAssets();
 	
+	void registrarJugador();
 	void mostrarMenu();
 	void mostrarPuntuaciones();
 	void mostrarCreditos();
@@ -24,7 +27,7 @@ private:
 	void regresarAlMenu();
 	
 public:
-	InterfazGrafica(int ancho, int alto, char* titulo);
+	InterfazGrafica(int ancho, int alto,const char* titulo);
 	~InterfazGrafica(); // destructor :p
 	void ejecutar(); // contiene el bucle while
 
