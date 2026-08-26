@@ -100,9 +100,9 @@ void regresarAlMenu(){
 		for(int i = 0; i < cantidad - 1; i++){
 			for(int j = 0; j < cantidad - 1 - i; j++){
 				if(jugadores[j].puntaje < jugadores[j+1].puntaje){
-					int temp = jugadores[j].puntaje;
-					jugadores[j].puntaje = jugadores[j+1].puntaje;
-					jugadores[j+1].puntaje = temp;
+					Jugador temp = jugadores[j];
+					jugadores[j] = jugadores[j+1];
+					jugadores[j+1] = temp;
 					
 				}
 			}
