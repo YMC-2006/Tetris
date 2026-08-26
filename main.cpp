@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "Pantalla.cpp"
-#include "Puntaje.h"
+#include "Jugador.h"
 
 Pantalla pantallaActual = MENU;
 Texture2D fondo;
@@ -94,30 +94,41 @@ void regresarAlMenu(){
 	}
 }
 
+	
+	void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
+		
+		for(int i = 0; i < cantidad - 1; i++){
+			for(int j = 0; j < cantidad - 1 - i; j++){
+				if(jugadores[j].puntaje < jugadores[j+1].puntaje){
+					int temp = jugadores[j].puntaje;
+					jugadores[j].puntaje = jugadores[j+1].puntaje;
+					jugadores[j+1].puntaje = temp;
+					
+				}
+			}
+		}
+	}
+		
+
 void mostrarPuntuaciones(){
 	regresarAlMenu();
 	DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
 	
-	Puntaje jugadores[10] = {
-		{"Carlos", 1500},
-		{"Ana", 1300},
-		{"Pedro", 1200},
-		{"Maria", 1100},
-		{"Luis", 1000},
-		{"Sofia", 900},
-		{"Diego", 800},
-		{"Laura", 700},
-		{"Juan", 600},
-		{"Elena", 500}
+	
+	Jugador jugadores[10] = { 
+		{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
+		{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
 	};
 	
+	
+	ordenarPuntuaciones(jugadores, 10);
 	
 	DrawText("NOMBRE", 500, 180, 20, BLACK);
 	DrawText("PUNTAJE", 800, 180, 20, BLACK);
 	
 	for(int i = 0; i < 10;i++){
 		DrawText(jugadores[i].nombre, 500, 220 + i * 40, 20, BLACK);
-		DrawText(TextFormat("%d",jugadores[i].cantidadPuntos), 800, 220 + i * 40, 20, BLACK );
+		DrawText(TextFormat("%d",jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK );
 	}
 	
 }
