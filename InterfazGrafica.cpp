@@ -1,8 +1,13 @@
 #include "InterfazGrafica.h"
 
 InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
+	
 	anchoPantalla = ancho;
 	altoPantalla = alto;
+	
+	jugadorActual.puntaje = 0;
+	crearTablero(tablero); // cuando arranco el juego creo el tablero
+	
 	InitWindow(anchoPantalla, altoPantalla, titulo);
 	InitAudioDevice();
 	cargarAssets();
@@ -16,8 +21,8 @@ InterfazGrafica::~InterfazGrafica(){
 }
 	
 void InterfazGrafica::cargarAssets(){
-	fondo = LoadTexture("assets/fondoMenu.png");
-	fondoCreditos = LoadTexture("assets/creditosFondo.png");
+	fondo = LoadTexture("assets/fondoRegistroJugador.png");
+	fondoCreditos = LoadTexture("assets/creditos.png");
 	fondoRegistroJugador = LoadTexture("assets/fondoRegistroJugador.png");
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
@@ -26,6 +31,8 @@ void InterfazGrafica::liberarAssets(){
 	UnloadMusicStream(musica);
 	UnloadTexture(fondo);
 	UnloadTexture(fondoCreditos);
+	UnloadTexture(fondoRegistroJugador);
+	liberarTablero(tablero);
 }
 	
 
@@ -33,14 +40,12 @@ void InterfazGrafica::liberarAssets(){
 void InterfazGrafica::registrarJugador(){
 	
 	DrawTexture(fondoRegistroJugador, 0, 0, WHITE);
-	DrawText("TETRIS", 600, 20, 50, PINK);
 	
 	Color rosadoClaro = {255, 182, 193, 255};
 	Color rosadoOscuro = {219, 112, 147, 255};
 	
-	DrawText("Ingresa tu nombre: ", 500, 350, 30, BLACK);
 	
-	Rectangle cajaTexto = {500, 550, 330, 50};
+	Rectangle cajaTexto = {500, 350, 330, 50};
 	DrawRectangleRec(cajaTexto, rosadoClaro);
 	DrawRectangleLinesEx(cajaTexto, 2, rosadoOscuro);
 	
@@ -58,7 +63,7 @@ void InterfazGrafica::registrarJugador(){
 	}
 	
 	DrawText(jugadorActual.nombre.c_str(), (int)cajaTexto.x + 10, (int)cajaTexto.y + 12, 20, BLACK);
-	DrawText("Presiona ENTER para continuar", 500, 420, 20, rosadoOscuro);
+	DrawText("Presiona ENTER para continuar", 500, 490, 20, rosadoOscuro);
 	
 	if(IsKeyPressed(KEY_ENTER) && !jugadorActual.nombre.empty()){
 		pantallaActual = MENU;
@@ -71,10 +76,10 @@ void InterfazGrafica::mostrarMenu(){
 		
 	DrawTexture(fondo, 0, 0, WHITE);
 	
-	Color rosadoClaro = {251, 181, 212, 255};
-	Color naranjaClaro = {251, 188, 117, 255};
-	Color verdeLimaClaro = {211, 221, 120, 255};
-	Color aquaClaro = {175, 221, 218, 255};
+	Color rosado = {245, 130, 180, 255};
+	Color naranja = {245, 145, 70, 255};
+	Color verde = {195, 210, 70, 255};
+	Color aqua = {105, 205, 195, 255};
 	
 	Rectangle btnJugar = {600, 500, 260, 60};
 	Rectangle btnCreditos = {605, 600, 250, 60};
@@ -116,71 +121,71 @@ void InterfazGrafica::mostrarMenu(){
 		
 	// Hover
 	if (CheckCollisionPointRec(mouse, btnJugar)){
-		DrawRectangleRec(btnJugar, DARKBLUE);
+		DrawRectangleRec(btnJugar, verde);
 	}else{
-		DrawRectangleRec(btnJugar, rosadoClaro);
+		DrawRectangleRec(btnJugar, rosado);
 	}
 	DrawText("Jugar", 670, 520, 30, WHITE);
 	
 	// Hover
 	if (CheckCollisionPointRec(mouse, btnCreditos)){
-		DrawRectangleRec(btnCreditos, DARKBLUE);
+		DrawRectangleRec(btnCreditos, verde);
 	}else{
-		DrawRectangleRec(btnCreditos, naranjaClaro);
+		DrawRectangleRec(btnCreditos, naranja);
 	}
 	DrawText("Creditos", 650, 620, 30, WHITE);
 
 		// Hover
 	if(CheckCollisionPointRec(mouse, btnMejoresPts)){
-		DrawRectangleRec(btnMejoresPts, DARKBLUE);
+		DrawRectangleRec(btnMejoresPts, verde);
 	}else{
-		DrawRectangleRec(btnMejoresPts, verdeLimaClaro);
+		DrawRectangleRec(btnMejoresPts, aqua);
 	}
 	DrawText("Mejores Puntuaciones", 600, 720, 25, WHITE);
 }
 	
-	void InterfazGrafica::regresarAlMenu(){
-		Rectangle btnRegresar = {300, 200, 20, 20};
-		DrawRectangleRec(btnRegresar, BLUE);
-		Vector2 mouse = GetMousePosition();
-		if(CheckCollisionPointRec(mouse, btnRegresar) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-			TraceLog(LOG_INFO, "Regresando al menu...");
-			pantallaActual = MENU;
-		}
+void InterfazGrafica::regresarAlMenu(){
+	Rectangle btnRegresar = {300, 200, 20, 20};
+	DrawRectangleRec(btnRegresar, BLUE);
+	Vector2 mouse = GetMousePosition();
+	if(CheckCollisionPointRec(mouse, btnRegresar) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		TraceLog(LOG_INFO, "Regresando al menu...");
+		pantallaActual = MENU;
 	}
+}
 	
 	// preguntar a la profe si cambiar de ubicacion
 	void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
-		for(int i = 0; i < cantidad - 1; i++){
-			for(int j = 0; j < cantidad - 1 - i; j++){
-				if(jugadores[j].puntaje < jugadores[j+1].puntaje){
-					Jugador temp = jugadores[j];
-					jugadores[j] = jugadores[j+1];
-					jugadores[j+1] = temp;
-				}
+	for(int i = 0; i < cantidad - 1; i++){
+		for(int j = 0; j < cantidad - 1 - i; j++){
+			if(jugadores[j].puntaje < jugadores[j+1].puntaje){
+				Jugador temp = jugadores[j];
+				jugadores[j] = jugadores[j+1];
+				jugadores[j+1] = temp;
 			}
 		}
 	}
+}
 		
-	void InterfazGrafica::mostrarPuntuaciones(){
-		regresarAlMenu();
-		DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
+void InterfazGrafica::mostrarPuntuaciones(){
+	regresarAlMenu();
+	DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
+	
+	Jugador jugadores[10] = {
+		{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
+		{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
+	};
+			
+	ordenarPuntuaciones(jugadores, 10);
 		
-		Jugador jugadores[10] = {
-			{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
-			{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
-		};
-			
-		ordenarPuntuaciones(jugadores, 10);
-			
-		DrawText("NOMBRE", 500, 180, 20, BLACK);
-		DrawText("PUNTAJE", 800, 180, 20, BLACK);
-			
-		for(int i = 0; i < 10; i++){
-			DrawText(jugadores[i].nombre.c_str(), 500, 220 + i * 40, 20, BLACK);
-			DrawText(TextFormat("%d", jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK);
-		}
+	DrawText("NOMBRE", 500, 180, 20, BLACK);
+	DrawText("PUNTAJE", 800, 180, 20, BLACK);
+		
+	for(int i = 0; i < 10; i++){
+		DrawText(jugadores[i].nombre.c_str(), 500, 220 + i * 40, 20, BLACK);
+		DrawText(TextFormat("%d", jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK);
 	}
+}
 
 void InterfazGrafica::mostrarCreditos(){
 		DrawTexture(fondoCreditos, 0, 0, WHITE);
@@ -188,19 +193,21 @@ void InterfazGrafica::mostrarCreditos(){
 		DrawText("Creditos", 500, 50, 40, BLUE);
 }
 		
-	void InterfazGrafica::mostrarJuego(){
-		regresarAlMenu();
-		DrawText("TETRIS", 500, 50, 30, BLUE);
-	}
+void InterfazGrafica::mostrarJuego(){
+	regresarAlMenu();
+	DrawText("TETRIS", 500, 50, 30, BLUE);
+	dibujarTablero(tablero); // cuando se abre la ventana del juego dibujamos el tablero
+}
 		
 void InterfazGrafica::ejecutar(){
+		
+		
 		while (!WindowShouldClose()){
 		UpdateMusicStream(musica);
 	
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 	
-		jugadorActual.puntaje = 0;
 		
 		if(pantallaActual == MENU){
 			mostrarMenu();

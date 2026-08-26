@@ -1,0 +1,87 @@
+#include "Tablero.h"
+#include "raylib.h"
+#include "Fila.h"
+#include "TipoPieza.h"
+
+void crearTablero(Tablero &tablero){
+	tablero.primera = nullptr;
+	Fila* anterior = nullptr;
+	
+	for(int i = 0; i < 20; i++){
+		Fila* nuevaFila = new Fila;
+		for(int c = 0; c < 10; c++){
+			nuevaFila->celdas[c] = NINGUNA;
+		}
+		
+		nuevaFila->siguiente = nullptr;
+		
+		if(tablero.primera == nullptr){
+			tablero.primera = nuevaFila;
+		}else{
+			anterior->siguiente = nuevaFila;
+		}
+		
+		anterior = nuevaFila;
+	}
+	
+}
+void liberarTablero(Tablero &tablero){
+	
+	Fila* actual = tablero.primera;
+	while(actual != nullptr){
+		Fila* siguienteFila = actual->siguiente;
+		delete actual;
+		actual = siguienteFila;
+	}
+	
+	tablero.primera = nullptr;
+	
+}
+	
+const int TAM_CELDA = 40;
+const int TABLERO_X = 550; // para que quede en el centro
+const int TABLERO_Y = 150; // para que quede bien arribita
+	
+Color colorDePieza(TipoPieza tipo){
+	
+	Color aqua     = {124, 213, 217, 255};  // I
+	Color amarillo = {255, 226, 111, 255};  // O
+	Color lila     = {232, 192, 252, 255};  // T
+	Color verde    = {196, 224, 47,  255};  // S
+	Color rosado   = {255, 169, 221, 255};  // Z
+	Color azul     = {153, 173, 255, 255};  // J
+	Color naranja  = {254, 183, 0,   255};  // L
+	
+	
+	switch(tipo){
+	case I: return aqua;
+	case O: return amarillo;
+	case T: return lila;
+	case S: return verde;
+	case Z:	return rosado;
+	case J: return azul;
+	case L:	return naranja;
+	default: return RAYWHITE; // NINGUNA
+	}
+}
+
+void dibujarTablero(Tablero &tablero){
+	
+	Fila* filaActual = tablero.primera;
+	int fila = 0;
+	
+	while(filaActual != nullptr){
+		for(int col = 0; col < 10; col++){
+			int px = TABLERO_X + col * TAM_CELDA;
+			int py = TABLERO_Y + fila * TAM_CELDA;
+			
+			Rectangle celda = {(float)px, (float)py, (float)TAM_CELDA, (float)TAM_CELDA};
+			DrawRectangleRec(celda, colorDePieza(filaActual->celdas[col]));
+			DrawRectangleLinesEx(celda, 1, GRAY);
+		}
+		filaActual = filaActual->siguiente;
+		fila++;
+	}
+
+	
+}

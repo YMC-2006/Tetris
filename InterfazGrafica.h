@@ -3,10 +3,13 @@
 #include "Pantalla.h"
 #include "Jugador.h"
 #include "raylib.h"
+#include "Tablero.h"
 
 class InterfazGrafica {
 	
 private:
+	
+	Tablero tablero;
 	Jugador jugadorActual;
 	int anchoPantalla, altoPantalla;
 	Pantalla pantallaActual = REGISTRO_JUGADOR;
