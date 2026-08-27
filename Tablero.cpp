@@ -3,6 +3,10 @@
 #include "Fila.h"
 #include "TipoPieza.h"
 
+const int TAM_CELDA = 40;
+const int TABLERO_X = 550; // para que quede en el centro
+const int TABLERO_Y = 150; // para que quede bien arribita
+
 void crearTablero(Tablero &tablero){
 	tablero.primera = nullptr;
 	Fila* anterior = nullptr;
@@ -38,9 +42,7 @@ void liberarTablero(Tablero &tablero){
 	
 }
 	
-const int TAM_CELDA = 40;
-const int TABLERO_X = 550; // para que quede en el centro
-const int TABLERO_Y = 150; // para que quede bien arribita
+
 	
 Color colorDePieza(TipoPieza tipo){
 	

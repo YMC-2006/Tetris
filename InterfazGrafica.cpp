@@ -7,6 +7,7 @@ InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	
 	jugadorActual.puntaje = 0;
 	crearTablero(tablero); // cuando arranco el juego creo el tablero
+	piezaActual = {T, 4, 1, 0};
 	
 	InitWindow(anchoPantalla, altoPantalla, titulo);
 	InitAudioDevice();
@@ -175,12 +176,12 @@ void InterfazGrafica::mostrarPuntuaciones(){
 		{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
 		{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
 	};
-			
+
 	ordenarPuntuaciones(jugadores, 10);
-		
+	
 	DrawText("NOMBRE", 500, 180, 20, BLACK);
 	DrawText("PUNTAJE", 800, 180, 20, BLACK);
-		
+	
 	for(int i = 0; i < 10; i++){
 		DrawText(jugadores[i].nombre.c_str(), 500, 220 + i * 40, 20, BLACK);
 		DrawText(TextFormat("%d", jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK);
@@ -197,6 +198,7 @@ void InterfazGrafica::mostrarJuego(){
 	regresarAlMenu();
 	DrawText("TETRIS", 500, 50, 30, BLUE);
 	dibujarTablero(tablero); // cuando se abre la ventana del juego dibujamos el tablero
+	dibujarPieza(piezaActual);
 }
 		
 void InterfazGrafica::ejecutar(){

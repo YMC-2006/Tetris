@@ -4,11 +4,13 @@
 #include "Jugador.h"
 #include "raylib.h"
 #include "Tablero.h"
+#include "Pieza.h"
 
 class InterfazGrafica {
 	
 private:
 	
+	Pieza piezaActual;;
 	Tablero tablero;
 	Jugador jugadorActual;
 	int anchoPantalla, altoPantalla;
