@@ -87,3 +87,12 @@ void dibujarTablero(Tablero &tablero){
 
 	
 }
+	
+Fila* obtenerFila(Tablero &tablero, int indice){
+	Fila* actual = tablero.primera;
+	for(int i = 0; i < indice && actual != nullptr; i++){
+		actual = actual->siguiente;
+	}
+	
+	return actual;
+}

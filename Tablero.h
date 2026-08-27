@@ -10,5 +10,6 @@ void crearTablero(Tablero &tablero);
 void liberarTablero(Tablero &tablero); // preguntar a la profe
 void dibujarTablero(Tablero &tablero);
 
+Fila* obtenerFila(Tablero &tablero, int indice);
 
 #endif

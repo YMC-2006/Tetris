@@ -5,10 +5,6 @@ InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	anchoPantalla = ancho;
 	altoPantalla = alto;
 	
-	jugadorActual.puntaje = 0;
-	crearTablero(tablero); // cuando arranco el juego creo el tablero
-	piezaActual = {T, 4, 1, 0};
-	
 	InitWindow(anchoPantalla, altoPantalla, titulo);
 	InitAudioDevice();
 	cargarAssets();
@@ -33,7 +29,7 @@ void InterfazGrafica::liberarAssets(){
 	UnloadTexture(fondo);
 	UnloadTexture(fondoCreditos);
 	UnloadTexture(fondoRegistroJugador);
-	liberarTablero(tablero);
+
 }
 	
 
@@ -197,8 +193,11 @@ void InterfazGrafica::mostrarCreditos(){
 void InterfazGrafica::mostrarJuego(){
 	regresarAlMenu();
 	DrawText("TETRIS", 500, 50, 30, BLUE);
-	dibujarTablero(tablero); // cuando se abre la ventana del juego dibujamos el tablero
-	dibujarPieza(piezaActual);
+	
+	juego.moverPiezaConTeclado();
+	juego.actualizar();
+	juego.dibujarElementosJuego();
+
 }
 		
 void InterfazGrafica::ejecutar(){
