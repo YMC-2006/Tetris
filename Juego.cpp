@@ -1,8 +1,11 @@
 #include "Juego.h"
 #include "raylib.h"
 #include "Tablero.h"
+#include <ctime> 
 
 Juego::Juego(){
+	
+	SetRandomSeed((unsigned int)time(NULL));
 	crearTablero(tablero);
 	
 }
@@ -30,7 +33,20 @@ void Juego::moverPiezaConTeclado(){
 
 
 void Juego::generarPiezaNueva(){
-	piezaActual = { O, 4, 1, 0 };
+	
+	int aleatorio = GetRandomValue(0, 1);
+	TipoPieza tipo;
+	if(aleatorio == 0){
+		tipo = O;
+	}else if(aleatorio == 1){
+		tipo = T;
+	}else{
+		//cout << "Se genero un numero fuera del rango";
+		return;
+	}
+	
+	
+	piezaActual = { tipo, 4, 1, 0 };
 	
 }
 	
