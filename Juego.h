@@ -23,9 +23,5 @@ private:
 	void colocarPiezaEnTablero();
 	void limpiarLineasCompletas();
 	
-	
 };
-
-
-
 #endif

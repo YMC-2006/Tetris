@@ -1,6 +1,7 @@
 #include "Pieza.h"
 #include "FormasPiezas.h"
 #include "raylib.h"
+#include "Tablero.h"
 
 
 const int TAM_CELDA = 40;
@@ -46,37 +47,43 @@ bool posicionValida(int columna, int fila){
 	return columna >= 0 && columna < 10 && fila >=0 && fila < 20;
 }
 	
-	
-bool piezaPuedeMoverse(Pieza &pieza, int dx, int dy){
-	Offset bloques[4];
-	
-	obtenerFormaPieza(pieza.tipo, pieza.orientacion, bloques);
-	
-	for(int i = 0; i < 4; i++){
-		int columna = pieza.x + dx + bloques[i].dx;
-		int fila = pieza.y + dy + bloques[i].dy;
+	bool piezaPuedeMoverse(Pieza &pieza, int dx, int dy, Tablero &tablero){
+		Offset bloques[4];
+		obtenerFormaPieza(pieza.tipo, pieza.orientacion, bloques);
 		
-		if(!posicionValida(columna, fila)){
-			return false;
+		for(int i = 0; i < 4; i++){
+			int columna = pieza.x + dx + bloques[i].dx;
+			int fila = pieza.y + dy + bloques[i].dy;
+			
+			if(!posicionValida(columna, fila)){
+				return false; // se sale del tablero, ni siquiera revisamos el tablero
+			}
+			
+			Fila* nodoFila = obtenerFila(tablero, fila);
+			if(nodoFila != nullptr && nodoFila->celdas[columna] != NINGUNA){
+				return false; // esta dentro del tablero pero ya esta ocupada
+			}
 		}
+		
+		return true;
 	}
 	
-	return true;
-	
-}
-	
-bool piezaPuedeRotar(const Pieza &pieza){
-	int siguienteOrientacion = (pieza.orientacion + 1) % 4;
-	Offset bloques[4];
-	obtenerFormaPieza(pieza.tipo, siguienteOrientacion, bloques);
-	
-	for(int i = 0; i < 4; i++){
-		int columna = pieza.x + bloques[i].dx;
-		int fila = pieza.y + bloques[i].dy;
-		if(!posicionValida(columna, fila)){
-			return false;
+	bool piezaPuedeRotar(Pieza &pieza, Tablero &tablero){
+		int siguienteOrientacion = (pieza.orientacion + 1) % 4;
+		Offset bloques[4];
+		obtenerFormaPieza(pieza.tipo, siguienteOrientacion, bloques);
+		
+		for(int i = 0; i < 4; i++){
+			int columna = pieza.x + bloques[i].dx;
+			int fila = pieza.y + bloques[i].dy;
+			
+			if(!posicionValida(columna, fila)) return false;
+			
+			Fila* nodoFila = obtenerFila(tablero, fila);
+			if(nodoFila != nullptr && nodoFila->celdas[columna] != NINGUNA){
+				return false;
+			}
 		}
-	}
 	
-	return true;
+		return true;
 }

@@ -13,16 +13,16 @@ Juego::~Juego(){
 	
 void Juego::moverPiezaConTeclado(){
 	
-	if(IsKeyPressed(KEY_LEFT) && piezaPuedeMoverse(piezaActual, -1, 0)){
+	if(IsKeyPressed(KEY_LEFT) && piezaPuedeMoverse(piezaActual, -1, 0, tablero)){
 		piezaActual.x--;
 	}
-	if(IsKeyPressed(KEY_RIGHT) && piezaPuedeMoverse(piezaActual, 1, 0)){
+	if(IsKeyPressed(KEY_RIGHT) && piezaPuedeMoverse(piezaActual, 1, 0, tablero)){
 		piezaActual.x++;
 	}
-	if(IsKeyPressed(KEY_DOWN) && piezaPuedeMoverse(piezaActual, 0, 1)){
+	if(IsKeyPressed(KEY_DOWN) && piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		piezaActual.y++;
 	}
-	if(IsKeyPressed(KEY_UP) && piezaPuedeRotar(piezaActual)){
+	if(IsKeyPressed(KEY_UP) && piezaPuedeRotar(piezaActual, tablero)){
 		piezaActual.orientacion = (piezaActual.orientacion + 1) % 4;
 	}
 	
@@ -37,7 +37,7 @@ void Juego::actualizar(){
 	temporizadorCaida += GetFrameTime();
 	if(temporizadorCaida >= intervaloCaida){
 		temporizadorCaida = 0;
-		if(piezaPuedeMoverse(piezaActual, 0, 1)){
+		if(piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 			piezaActual.y++;
 		}else{
 			colocarPiezaEnTablero();

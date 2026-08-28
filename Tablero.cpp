@@ -88,6 +88,8 @@ void dibujarTablero(Tablero &tablero){
 	
 }
 	
+	
+// hay que recorrer las filas hasta la ultima porque es un lista  ir saltando de nodo en nodo
 Fila* obtenerFila(Tablero &tablero, int indice){
 	Fila* actual = tablero.primera;
 	for(int i = 0; i < indice && actual != nullptr; i++){
