@@ -30,7 +30,8 @@ void Juego::moverPiezaConTeclado(){
 
 
 void Juego::generarPiezaNueva(){
-	piezaActual = { T, 4, 1, 0 };
+	piezaActual = { O, 4, 1, 0 };
+	
 }
 	
 void Juego::actualizar(){

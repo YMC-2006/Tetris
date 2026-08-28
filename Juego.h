@@ -16,6 +16,7 @@ public:
 private:
 	Tablero tablero;
 	Pieza piezaActual;
+	//Pieza piezaO;
 	float temporizadorCaida = 0;
 	const float intervaloCaida = 0.5f;
 	

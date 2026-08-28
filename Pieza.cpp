@@ -18,6 +18,11 @@ void obtenerFormaPieza(TipoPieza tipo, int orientacion, Offset bloques[4]){
 			bloques[i] = FORMA_T[orientacion][i];
 		}
 		break;
+	case O:
+		for(int i = 0; i < 4; i++){
+			bloques[i] = FORMA_O[orientacion][i];		
+		}
+		break;
 	default: 
 		for(int i = 0; i < 4; i++) bloques[i] = {0,0};
 		break;

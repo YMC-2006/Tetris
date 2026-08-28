@@ -45,7 +45,7 @@ cursor=21:0
 open=true
 [header]
 path=Jugador.h
-cursor=9:0
+cursor=12:0
 open=true
 [header]
 path=InterfazGrafica.h
@@ -79,7 +79,7 @@ open=true
 path=Assets\FrozenPines.wav
 cursor=0:0
 [other]
-path=Assets\creditosFondo.png
+path=Assets\JuegoFondo.png
 cursor=0:0
 [other]
 path=Assets\fondo.png
@@ -89,6 +89,12 @@ path=Assets\fondoMenu.png
 cursor=0:0
 [other]
 path=Assets\fondoRegistroJugador.png
+cursor=0:0
+[other]
+path=Assets\creditos.png
+cursor=0:0
+[other]
+path=Assets\fondoTopJugadores.png
 cursor=0:0
 [config]
 name=Debug
