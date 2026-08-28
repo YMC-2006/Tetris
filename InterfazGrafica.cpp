@@ -18,9 +18,11 @@ InterfazGrafica::~InterfazGrafica(){
 }
 	
 void InterfazGrafica::cargarAssets(){
-	fondo = LoadTexture("assets/fondoRegistroJugador.png");
+	fondo = LoadTexture("assets/fondo.png");
 	fondoCreditos = LoadTexture("assets/creditos.png");
 	fondoRegistroJugador = LoadTexture("assets/fondoRegistroJugador.png");
+	fondoTopJugadores = LoadTexture("assets/fondoTopJugadores.png");
+	//fondoJuego = LoadTexture("assets/JuegoFondo.png");
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
 	
@@ -29,7 +31,7 @@ void InterfazGrafica::liberarAssets(){
 	UnloadTexture(fondo);
 	UnloadTexture(fondoCreditos);
 	UnloadTexture(fondoRegistroJugador);
-
+	UnloadTexture(fondoTopJugadores);
 }
 	
 
@@ -165,9 +167,9 @@ void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
 }
 		
 void InterfazGrafica::mostrarPuntuaciones(){
+	DrawTexture(fondoTopJugadores, 0, 0, WHITE);
 	regresarAlMenu();
-	DrawText("Mejores Puntuaciones", 500, 50, 40, BLUE);
-	
+		
 	Jugador jugadores[10] = {
 		{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
 		{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
@@ -175,12 +177,10 @@ void InterfazGrafica::mostrarPuntuaciones(){
 
 	ordenarPuntuaciones(jugadores, 10);
 	
-	DrawText("NOMBRE", 500, 180, 20, BLACK);
-	DrawText("PUNTAJE", 800, 180, 20, BLACK);
 	
 	for(int i = 0; i < 10; i++){
-		DrawText(jugadores[i].nombre.c_str(), 500, 220 + i * 40, 20, BLACK);
-		DrawText(TextFormat("%d", jugadores[i].puntaje), 800, 220 + i * 40, 20, BLACK);
+		DrawText(jugadores[i].nombre.c_str(), 500, 410 + i * 50, 25, BLACK);
+		DrawText(TextFormat("%d", jugadores[i].puntaje), 850, 410 + i * 50, 25, BLACK);
 	}
 }
 
@@ -192,7 +192,7 @@ void InterfazGrafica::mostrarCreditos(){
 		
 void InterfazGrafica::mostrarJuego(){
 	regresarAlMenu();
-	DrawText("TETRIS", 500, 50, 30, BLUE);
+
 	
 	juego.moverPiezaConTeclado();
 	juego.actualizar();

@@ -17,6 +17,8 @@ private:
 	Texture2D fondo;
 	Texture2D fondoCreditos;
 	Texture2D fondoRegistroJugador;
+	Texture2D fondoTopJugadores;
+	Texture2D fondoJuego;
 	Music musica;
 	bool musicaActiva = false;
 	
