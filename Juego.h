@@ -20,7 +20,7 @@ private:
 	const float intervaloCaida = 0.5f;
 	
 	void generarPiezaNueva();
-	void colocarPiezaEnTablero();
+	void fijarPiezaEnTablero();
 	void limpiarLineasCompletas();
 	
 };

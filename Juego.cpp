@@ -34,15 +34,18 @@ void Juego::generarPiezaNueva(){
 }
 	
 void Juego::actualizar(){
+	
+	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
+		fijarPiezaEnTablero();
+		generarPiezaNueva();
+		temporizadorCaida = 0;
+		return;
+	}
+	
 	temporizadorCaida += GetFrameTime();
 	if(temporizadorCaida >= intervaloCaida){
 		temporizadorCaida = 0;
-		if(piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
-			piezaActual.y++;
-		}else{
-			colocarPiezaEnTablero();
-			generarPiezaNueva();
-		}
+		piezaActual.y++;
 	}
 }
 
@@ -53,7 +56,7 @@ void Juego::dibujarElementosJuego(){
 }
 
 
-void Juego::colocarPiezaEnTablero(){
+void Juego::fijarPiezaEnTablero(){
 	Offset bloques[4];
 	obtenerFormaPieza(piezaActual.tipo, piezaActual.orientacion, bloques);
 	

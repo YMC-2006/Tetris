@@ -47,6 +47,8 @@ bool posicionValida(int columna, int fila){
 	return columna >= 0 && columna < 10 && fila >=0 && fila < 20;
 }
 	
+	
+	// revisar las funciones de mover la pieza y rotar
 	bool piezaPuedeMoverse(Pieza &pieza, int dx, int dy, Tablero &tablero){
 		Offset bloques[4];
 		obtenerFormaPieza(pieza.tipo, pieza.orientacion, bloques);
@@ -76,8 +78,10 @@ bool posicionValida(int columna, int fila){
 		for(int i = 0; i < 4; i++){
 			int columna = pieza.x + bloques[i].dx;
 			int fila = pieza.y + bloques[i].dy;
-			
-			if(!posicionValida(columna, fila)) return false;
+		
+			if(!posicionValida(columna, fila)){
+				return false;
+			}
 			
 			Fila* nodoFila = obtenerFila(tablero, fila);
 			if(nodoFila != nullptr && nodoFila->celdas[columna] != NINGUNA){

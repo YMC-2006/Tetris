@@ -152,7 +152,7 @@ void InterfazGrafica::regresarAlMenu(){
 }
 	
 	// preguntar a la profe si cambiar de ubicacion
-	void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
+void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
 	for(int i = 0; i < cantidad - 1; i++){
 		for(int j = 0; j < cantidad - 1 - i; j++){
 			if(jugadores[j].puntaje < jugadores[j+1].puntaje){
