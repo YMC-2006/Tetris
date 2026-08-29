@@ -51,7 +51,7 @@ Color colorDePieza(TipoPieza tipo){
 	Color lila     = {232, 192, 252, 255};  // T
 	Color verde    = {196, 224, 47,  255};  // S
 	Color rosado   = {255, 169, 221, 255};  // Z
-	Color azul     = {153, 173, 255, 255};  // J
+	Color azul     = {153, 173, 255, };  // J
 	Color naranja  = {254, 183, 0,   255};  // L
 	
 	
@@ -61,7 +61,7 @@ Color colorDePieza(TipoPieza tipo){
 	case T: return lila;
 	case S: return verde;
 	case Z:	return rosado;
-	case J: return azul;
+	case J: return RED;
 	case L:	return naranja;
 	default: return RAYWHITE; // NINGUNA
 	}

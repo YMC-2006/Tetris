@@ -34,13 +34,24 @@ void Juego::moverPiezaConTeclado(){
 
 void Juego::generarPiezaNueva(){
 	
-	int aleatorio = GetRandomValue(0, 1);
+	int aleatorio = GetRandomValue(0, 6);
 	TipoPieza tipo;
 	if(aleatorio == 0){
 		tipo = O;
 	}else if(aleatorio == 1){
 		tipo = T;
-	}else{
+	}else if(aleatorio == 2){
+		tipo = L;
+	}else if(aleatorio == 3){
+		tipo = S;
+	}else if(aleatorio == 4){
+		tipo = Z;
+	}else if(aleatorio == 5){
+		tipo = J;
+	}else if(aleatorio == 6){
+		tipo = I;
+	}
+	else{
 		//cout << "Se genero un numero fuera del rango";
 		return;
 	}
