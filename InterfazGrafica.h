@@ -31,6 +31,7 @@ private:
 	void mostrarCreditos();
 	void mostrarJuego();
 	void regresarAlMenu();
+	void mostrarFinJuego();
 	
 public:
 	InterfazGrafica(int ancho, int alto,const char* titulo);

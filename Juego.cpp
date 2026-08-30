@@ -7,7 +7,7 @@ Juego::Juego(){
 	
 	SetRandomSeed((unsigned int)time(NULL));
 	crearTablero(tablero);
-	
+	generarPiezaNueva(); 
 }
 
 Juego::~Juego(){
@@ -15,6 +15,9 @@ Juego::~Juego(){
 }
 	
 void Juego::moverPiezaConTeclado(){
+	if(juegoTerminado){
+		return;
+	}
 	
 	if(IsKeyPressed(KEY_LEFT) && piezaPuedeMoverse(piezaActual, -1, 0, tablero)){
 		piezaActual.x--;
@@ -62,6 +65,9 @@ void Juego::generarPiezaNueva(){
 }
 	
 void Juego::actualizar(){
+	if(juegoTerminado){
+		return;
+	}
 	
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		
@@ -108,6 +114,19 @@ void Juego::fijarPiezaEnTablero(){
 			nodoFila->celdas[columna] = piezaActual.tipo;
 		}
 	}
+}
+
+void Juego::reiniciar(){
+	liberarTablero(tablero);
+	crearTablero(tablero);
+	juegoTerminado = false;
+	puntaje = 0;
+	temporizadorCaida = 0;
+	generarPiezaNueva();
+}
+
+bool Juego::haTerminado(){
+	return juegoTerminado;
 }
 
 int Juego::obtenerPuntaje(){

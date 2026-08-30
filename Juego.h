@@ -14,6 +14,7 @@ public:
 	void dibujarElementosJuego();
 	int obtenerPuntaje();
 	bool haTerminado();
+	void reiniciar();
 	
 private:
 	Tablero tablero;
@@ -26,7 +27,7 @@ private:
 	
 	void generarPiezaNueva();
 	void fijarPiezaEnTablero();
-	int limpiarLineasCompletas();
+	
 	
 	
 };

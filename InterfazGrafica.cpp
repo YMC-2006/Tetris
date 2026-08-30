@@ -71,6 +71,20 @@ void InterfazGrafica::registrarJugador(){
 }
 
 
+void InterfazGrafica::mostrarFinJuego(){
+	DrawText("FIN DEL JUEGO", anchoPantalla/2 - 150, 200, 40, RED);
+	DrawText(TextFormat("Puntaje final: %d", juego.obtenerPuntaje()), anchoPantalla/2 - 130, 270, 30, BLACK);
+	
+	Rectangle botonJugar = {anchoPantalla/2.0f - 100, 350, 200, 50};
+	DrawRectangleRec(botonJugar, LIGHTGRAY);
+	DrawText("Jugar de nuevo", (int)botonJugar.x + 20, (int)botonJugar.y + 15, 20, BLACK);
+	
+	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botonJugar)){
+		juego.reiniciar();
+		pantallaActual = JUEGO;
+	}
+}
+
 void InterfazGrafica::mostrarMenu(){
 		
 	DrawTexture(fondo, 0, 0, WHITE);
@@ -193,9 +207,17 @@ void InterfazGrafica::mostrarCreditos(){
 void InterfazGrafica::mostrarJuego(){
 	regresarAlMenu();
 	
+	if(juego.haTerminado()){
+		pantallaActual = FIN_JUEGO;
+		return;
+	}
+	
+	
 	juego.moverPiezaConTeclado();
 	juego.actualizar();
 	juego.dibujarElementosJuego();
+	DrawText(TextFormat("Puntaje: %d", juego.obtenerPuntaje()), 50, 50, 25, BLACK);
+	
 
 }
 		
@@ -219,6 +241,8 @@ void InterfazGrafica::ejecutar(){
 			mostrarJuego();
 		}else if(pantallaActual == CREDITOS){
 			mostrarCreditos();
+		}else if(pantallaActual == FIN_JUEGO){
+			mostrarFinJuego(); 
 		}
 		EndDrawing();
 	}
