@@ -64,8 +64,19 @@ void Juego::generarPiezaNueva(){
 void Juego::actualizar(){
 	
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
+		
 		fijarPiezaEnTablero();
 		generarPiezaNueva();
+		
+		int lineas = limpiarFilaCompleta(tablero);
+		if(lineas > 0){
+			puntaje += lineas * 100; 
+		}
+				
+		if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
+			juegoTerminado = true; 
+		}
+		
 		temporizadorCaida = 0;
 		return;
 	}
@@ -97,4 +108,8 @@ void Juego::fijarPiezaEnTablero(){
 			nodoFila->celdas[columna] = piezaActual.tipo;
 		}
 	}
+}
+
+int Juego::obtenerPuntaje(){
+	return puntaje;
 }

@@ -34,9 +34,9 @@ const Offset FORMA_L[4][4] = {
 // 4 orientaciones distintas
 const Offset FORMA_J[4][4] = {
 	{ {-1,-1}, {-1,0}, {0,0}, {1,0} },  // orientacion 0
-{ {1,-1}, {0,-1}, {0,0}, {0,1} },   // orientacion 1
-	{ {1,1}, {1,0}, {0,0}, {-1,0} },    // orientacion 2
-{ {-1,1}, {0,1}, {0,0}, {0,-1} }    // orientacion 3
+	{{1,-1}, {0,-1}, {0,0}, {0,1} },   // orientacion 1
+	{{1,1}, {1,0}, {0,0}, {-1,0} },    // orientacion 2
+	{{-1,1}, {0,1}, {0,0}, {0,-1} }    // orientacion 3
 };
 
 // 5

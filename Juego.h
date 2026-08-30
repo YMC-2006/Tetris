@@ -12,17 +12,22 @@ public:
 	void moverPiezaConTeclado();
 	void actualizar();
 	void dibujarElementosJuego();
+	int obtenerPuntaje();
+	bool haTerminado();
 	
 private:
 	Tablero tablero;
 	Pieza piezaActual;
-	//Pieza piezaO;
 	float temporizadorCaida = 0;
 	const float intervaloCaida = 0.5f;
+	int puntaje = 0;
+	bool juegoTerminado = false;
+	
 	
 	void generarPiezaNueva();
 	void fijarPiezaEnTablero();
-	void limpiarLineasCompletas();
+	int limpiarLineasCompletas();
+	
 	
 };
 #endif

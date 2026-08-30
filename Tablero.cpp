@@ -98,3 +98,65 @@ Fila* obtenerFila(Tablero &tablero, int indice){
 	
 	return actual;
 }
+
+	
+bool filaEstaCompleta(Fila* filaActual){		
+	
+	for(int i = 0; i < 10; i++){
+		if(filaActual->celdas[i] == NINGUNA){
+			return false;
+		}
+	}
+	return true;
+}
+	
+int limpiarFilaCompleta(Tablero &tablero){
+	
+	Fila* filaActual = tablero.primera;
+	Fila* anterior = nullptr;
+	
+	int cantFilasEliminadas = 0;
+	
+	while(filaActual != nullptr){
+		
+		
+		if(filaEstaCompleta(filaActual)){
+			Fila* siguienteFila = filaActual->siguiente;
+			
+			if(anterior == nullptr){
+				tablero.primera = siguienteFila;
+			}else{
+				anterior->siguiente = siguienteFila;
+			}
+			
+			delete filaActual;
+			
+			//desp de haber eliminado una fila tenemos que insertar una nueva fila vacida al inicio
+			Fila *filaVacida = new Fila;
+			for(int i = 0; i < 10; i++){
+				filaVacida->celdas[i] = NINGUNA;				
+			}
+			
+			filaVacida->siguiente = tablero.primera;
+			tablero.primera = filaVacida;
+			
+			cantFilasEliminadas++;
+			filaActual = siguienteFila;
+		}else{
+			anterior = filaActual;
+			filaActual = filaActual->siguiente;
+		}
+
+		
+		
+	}
+	
+	return cantFilasEliminadas;
+}
+	
+	
+	
+	
+	
+	
+	

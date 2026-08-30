@@ -192,7 +192,6 @@ void InterfazGrafica::mostrarCreditos(){
 		
 void InterfazGrafica::mostrarJuego(){
 	regresarAlMenu();
-
 	
 	juego.moverPiezaConTeclado();
 	juego.actualizar();
