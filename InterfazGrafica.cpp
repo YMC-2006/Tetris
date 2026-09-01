@@ -1,5 +1,6 @@
 #include "InterfazGrafica.h"
-
+#include <fstream>
+using namespace std;
 InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	
 	anchoPantalla = ancho;
@@ -22,7 +23,7 @@ void InterfazGrafica::cargarAssets(){
 	fondoCreditos = LoadTexture("assets/creditos.png");
 	fondoRegistroJugador = LoadTexture("assets/fondoRegistroJugador.png");
 	fondoTopJugadores = LoadTexture("assets/fondoTopJugadores.png");
-	//fondoJuego = LoadTexture("assets/JuegoFondo.png");
+	fondoJuego = LoadTexture("assets/JuegoFondo.png");
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
 	
@@ -65,6 +66,7 @@ void InterfazGrafica::registrarJugador(){
 	DrawText("Presiona ENTER para continuar", 500, 490, 20, rosadoOscuro);
 	
 	if(IsKeyPressed(KEY_ENTER) && !jugadorActual.nombre.empty()){
+		jugadorActual.puntaje = 0;
 		pantallaActual = MENU;
 	}
 
@@ -179,20 +181,63 @@ void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
 		}
 	}
 }
+	
+// PERSISTENCIA USANDO ARCHIVOS .TXT
+	
+int cargarPuntuaciones(Jugador jugadores[], int maximo){
+	ifstream archivoPuntuaciones("tetrisPuntuaciones.txt");
+	if(!archivoPuntuaciones.is_open()){
+		return 0;
+	}
+	
+	int cantidad = 0;
+	string nombre;
+	int puntaje;
+	
+	
+	while(cantidad < maximo && archivoPuntuaciones >> nombre >> puntaje){
+		jugadores[cantidad].nombre = nombre;
+		jugadores[cantidad].puntaje = puntaje;
+		cantidad++;
+	}
+	
+	archivoPuntuaciones.close();
+	return cantidad;
+}
+	
+void guardarPuntuaciones(Jugador jugadores[], int cantidad){
+	ofstream archivoPuntuaciones("tetrisPuntuaciones.txt");
+	for(int i = 0; i < cantidad; i++){
+		archivoPuntuaciones << jugadores[i].nombre << " " << jugadores[i].puntaje << "\n";
+	}
+	archivoPuntuaciones.close();
+}
+	
+void guardarSiCalifica(Jugador jugador){
+	Jugador jugadores[11];
+	int cantidad = cargarPuntuaciones(jugadores, 10);
+	jugadores[cantidad] = jugador;
+	cantidad++;
+	ordenarPuntuaciones(jugadores, cantidad);
+	if(cantidad > 10){
+		cantidad = 10;
+	}
+	guardarPuntuaciones(jugadores, cantidad);
+}
+	
+	
+
 		
 void InterfazGrafica::mostrarPuntuaciones(){
 	DrawTexture(fondoTopJugadores, 0, 0, WHITE);
 	regresarAlMenu();
 		
-	Jugador jugadores[10] = {
-		{"Maria", 1100},{"Luis", 1000},{"Sofia", 900},{"Diego", 800},{"Laura", 700},
-		{"Juan", 600},{"Elena", 500},{"Carlos", 1500},{"Ana", 1300},{"Pedro", 1200}
-	};
-
-	ordenarPuntuaciones(jugadores, 10);
+	Jugador jugadores[10];
+	int cantidad = cargarPuntuaciones(jugadores, 10);
+	ordenarPuntuaciones(jugadores, cantidad);
 	
 	
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < cantidad; i++){
 		DrawText(jugadores[i].nombre.c_str(), 500, 410 + i * 50, 25, BLACK);
 		DrawText(TextFormat("%d", jugadores[i].puntaje), 850, 410 + i * 50, 25, BLACK);
 	}
@@ -205,9 +250,13 @@ void InterfazGrafica::mostrarCreditos(){
 }
 		
 void InterfazGrafica::mostrarJuego(){
+	DrawTexture(fondoJuego, 0, 0, WHITE);
 	regresarAlMenu();
 	
 	if(juego.haTerminado()){
+		
+		jugadorActual.puntaje = juego.obtenerPuntaje();
+		guardarSiCalifica(jugadorActual);
 		pantallaActual = FIN_JUEGO;
 		return;
 	}

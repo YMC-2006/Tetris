@@ -1,0 +1,4 @@
+meli 100
+yuli 100
+yuli 0
+yuuu 0
