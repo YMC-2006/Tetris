@@ -252,6 +252,7 @@ void InterfazGrafica::mostrarCreditos(){
 void InterfazGrafica::mostrarJuego(){
 	DrawTexture(fondoJuego, 0, 0, WHITE);
 	regresarAlMenu();
+	juego.pausar();
 	
 	if(juego.haTerminado()){
 		

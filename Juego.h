@@ -2,7 +2,7 @@
 #define JUEGO_H
 #include "Tablero.h"
 #include "Pieza.h"
-
+#include "raylib.h"
 class Juego{
 	
 public:
@@ -15,10 +15,12 @@ public:
 	int obtenerPuntaje();
 	bool haTerminado();
 	void reiniciar();
+	void pausar();
 	
 private:
 	Tablero tablero;
 	Pieza piezaActual;
+	Rectangle btnPausa;
 	float temporizadorCaida = 0;
 	const float intervaloCaida = 0.5f;
 	int puntaje = 0;
