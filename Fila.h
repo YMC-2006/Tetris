@@ -5,6 +5,7 @@
 struct Fila{
 	TipoPieza celdas[10];
 	Fila* siguiente;
+	bool marcada;
 };
 
 #endif

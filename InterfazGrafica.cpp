@@ -24,6 +24,7 @@ void InterfazGrafica::cargarAssets(){
 	fondoRegistroJugador = LoadTexture("assets/fondoRegistroJugador.png");
 	fondoTopJugadores = LoadTexture("assets/fondoTopJugadores.png");
 	fondoJuego = LoadTexture("assets/JuegoFondo.png");
+	fondoPausa = LoadTexture("assets/fondoPausa.png");
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
 	
@@ -85,6 +86,42 @@ void InterfazGrafica::mostrarFinJuego(){
 		juego.reiniciar();
 		pantallaActual = JUEGO;
 	}
+}
+
+void InterfazGrafica::mostrarVistaPausa(){
+
+	DrawTexture(fondoPausa, 0, 0, WHITE);
+	Rectangle btnReanudar = {500, 400, 300, 80};
+	Rectangle btnSalir = {500, 520, 300, 80};
+	
+	Vector2 mouse = GetMousePosition();
+	
+	// REANUDAR
+	if(CheckCollisionPointRec(mouse, btnReanudar) &&
+	   IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		
+		TraceLog(LOG_INFO, "Reanudando juego...");
+		juegoPausado = false;
+	}
+	
+	   
+	  // SALIR
+	if(CheckCollisionPointRec(mouse, btnSalir) &&
+	  IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+	   
+	   TraceLog(LOG_INFO, "Saliendo del juego...");
+	   juegoPausado = false;
+	   pantallaActual = MENU;
+	} 
+	  
+	Color rosado = {255, 169, 221, 255}; 
+	Color lila = {232, 192, 252, 255};  
+	  
+	DrawRectangleRec(btnReanudar, rosado);
+	DrawRectangleRec(btnSalir, lila);
+	
+	DrawText("REANUDAR", 575, 425, 30, WHITE);
+	DrawText("SALIR", 610, 545, 30, WHITE);
 }
 
 void InterfazGrafica::mostrarMenu(){
@@ -250,9 +287,24 @@ void InterfazGrafica::mostrarCreditos(){
 }
 		
 void InterfazGrafica::mostrarJuego(){
+	
 	DrawTexture(fondoJuego, 0, 0, WHITE);
 	regresarAlMenu();
-	juego.pausar();
+	
+	Rectangle btnPausa = {100, 100, 50, 20};
+	DrawRectangleRec(btnPausa, RED);
+	Vector2 mouse = GetMousePosition();
+	
+	if(CheckCollisionPointRec(mouse, btnPausa) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		juegoPausado = true;
+		TraceLog(LOG_INFO, "PAUSANDO EL JUEGO...");
+	}
+	
+	// Si el juego está pausado, mostramos la vista de pausa
+	if(juegoPausado){
+		mostrarVistaPausa();
+		return;
+	}
 	
 	if(juego.haTerminado()){
 		
@@ -263,37 +315,41 @@ void InterfazGrafica::mostrarJuego(){
 	}
 	
 	
-	juego.moverPiezaConTeclado();
-	juego.actualizar();
 	juego.dibujarElementosJuego();
 	DrawText(TextFormat("Puntaje: %d", juego.obtenerPuntaje()), 50, 50, 25, BLACK);
-	
+	juego.moverPiezaConTeclado();
+	juego.actualizar();
 
 }
 		
 void InterfazGrafica::ejecutar(){
 		
-		
-		while (!WindowShouldClose()){
-		UpdateMusicStream(musica);
-	
-		BeginDrawing();
-		ClearBackground(RAYWHITE);
-	
-		
-		if(pantallaActual == MENU){
-			mostrarMenu();
-		}else if(pantallaActual == REGISTRO_JUGADOR){
-			registrarJugador();
-		}else if(pantallaActual == PUNTUACIONES){
-			mostrarPuntuaciones();
-		}else if(pantallaActual == JUEGO){
-			mostrarJuego();
-		}else if(pantallaActual == CREDITOS){
-			mostrarCreditos();
-		}else if(pantallaActual == FIN_JUEGO){
-			mostrarFinJuego(); 
+		if( !juegoPausado ){
+			
+			while (!WindowShouldClose()){
+				UpdateMusicStream(musica);
+				
+				BeginDrawing();
+				ClearBackground(RAYWHITE);
+				
+				
+				if(pantallaActual == MENU){
+					mostrarMenu();
+				}else if(pantallaActual == REGISTRO_JUGADOR){
+					registrarJugador();
+				}else if(pantallaActual == PUNTUACIONES){
+					mostrarPuntuaciones();
+				}else if(pantallaActual == JUEGO){
+					mostrarJuego();
+				}else if(pantallaActual == CREDITOS){
+					mostrarCreditos();
+				}else if(pantallaActual == FIN_JUEGO){
+					mostrarFinJuego(); 
+				}
+				EndDrawing();
+			}
+			
+			
 		}
-		EndDrawing();
-	}
+		
 }

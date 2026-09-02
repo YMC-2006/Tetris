@@ -19,8 +19,10 @@ private:
 	Texture2D fondoRegistroJugador;
 	Texture2D fondoTopJugadores;
 	Texture2D fondoJuego;
+	Texture2D fondoPausa;
 	Music musica;
 	bool musicaActiva = false;
+	bool juegoPausado = false;
 	
 	void cargarAssets();
 	void liberarAssets();
@@ -30,6 +32,7 @@ private:
 	void mostrarPuntuaciones();
 	void mostrarCreditos();
 	void mostrarJuego();
+	void mostrarVistaPausa();
 	void regresarAlMenu();
 	void mostrarFinJuego();
 	

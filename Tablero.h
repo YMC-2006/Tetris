@@ -13,4 +13,8 @@ void dibujarTablero(Tablero &tablero);
 Fila* obtenerFila(Tablero &tablero, int indice);
 bool filaEstaCompleta(Fila* nodoActual);
 int limpiarFilaCompleta(Tablero &tablero);
+int marcarFilasCompletas(Tablero &tablero); // para la animacion
+
+
+
 #endif

@@ -15,7 +15,7 @@ Juego::~Juego(){
 }
 	
 void Juego::moverPiezaConTeclado(){
-	if(juegoTerminado){
+	if(juegoTerminado || animandoLimpieza){
 		return;
 	}
 	
@@ -69,21 +69,34 @@ void Juego::actualizar(){
 		return;
 	}
 	
+	if(animandoLimpieza){
+		temporizadorLimpieza += GetFrameTime();
+		if(temporizadorLimpieza  >= duracionLimpieza){
+			int lineas = limpiarFilaCompleta(tablero);
+			if(lineas > 0){
+				puntaje += lineas * 100; 
+			}
+			animandoLimpieza = false;
+			if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
+				juegoTerminado = true;
+			}
+		
+		}
+		return;   // pase o no el timer, no sigas a la lógica de caída normal
+	}
+	
+	
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		
 		fijarPiezaEnTablero();
 		generarPiezaNueva();
 		
-		int lineas = limpiarFilaCompleta(tablero);
-		if(lineas > 0){
-			puntaje += lineas * 100; 
+		if(marcarFilasCompletas(tablero) > 0){
+			animandoLimpieza = true;
+			temporizadorLimpieza = 0;
+		}else if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
+			juegoTerminado = true;
 		}
-				
-		if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
-			juegoTerminado = true; 
-		}
-		
-		temporizadorCaida = 0;
 		return;
 	}
 	

@@ -15,6 +15,7 @@ void crearTablero(Tablero &tablero){
 		Fila* nuevaFila = new Fila;
 		for(int c = 0; c < 10; c++){
 			nuevaFila->celdas[c] = NINGUNA;
+			nuevaFila->marcada = false;
 		}
 		
 		nuevaFila->siguiente = nullptr;
@@ -69,6 +70,7 @@ Color colorDePieza(TipoPieza tipo){
 
 void dibujarTablero(Tablero &tablero){
 	
+	
 	Fila* filaActual = tablero.primera;
 	int fila = 0;
 	
@@ -77,8 +79,16 @@ void dibujarTablero(Tablero &tablero){
 			int px = TABLERO_X + col * TAM_CELDA;
 			int py = TABLERO_Y + fila * TAM_CELDA;
 			
+			Color color;
+			if(filaActual->marcada){
+				bool destello = ((int)(GetTime() * 12)%2 == 0);
+				color = destello ? WHITE : colorDePieza(filaActual->celdas[col]);
+			}else{
+				color = colorDePieza(filaActual->celdas[col]);
+			}
+			
 			Rectangle celda = {(float)px, (float)py, (float)TAM_CELDA, (float)TAM_CELDA};
-			DrawRectangleRec(celda, colorDePieza(filaActual->celdas[col]));
+			DrawRectangleRec(celda, color);
 			DrawRectangleLinesEx(celda, 1, GRAY);
 		}
 		filaActual = filaActual->siguiente;
@@ -123,6 +133,7 @@ int limpiarFilaCompleta(Tablero &tablero){
 		if(filaEstaCompleta(filaActual)){
 			Fila* siguienteFila = filaActual->siguiente;
 			
+			
 			if(anterior == nullptr){
 				tablero.primera = siguienteFila;
 			}else{
@@ -136,6 +147,8 @@ int limpiarFilaCompleta(Tablero &tablero){
 			for(int i = 0; i < 10; i++){
 				filaVacida->celdas[i] = NINGUNA;				
 			}
+			
+			filaVacida->marcada = false;
 			
 			filaVacida->siguiente = tablero.primera;
 			tablero.primera = filaVacida;
@@ -154,7 +167,19 @@ int limpiarFilaCompleta(Tablero &tablero){
 	return cantFilasEliminadas;
 }
 	
-	
+int marcarFilasCompletas(Tablero &tablero){
+	int contador = 0;
+	Fila* filaActual = tablero.primera;
+	while(filaActual != nullptr){
+		if(filaEstaCompleta(filaActual)){
+			filaActual->marcada = true;
+			contador++;
+		}
+		filaActual = filaActual->siguiente;
+	}
+	return contador;
+}
+
 	
 	
 	

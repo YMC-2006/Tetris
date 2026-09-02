@@ -26,6 +26,10 @@ private:
 	int puntaje = 0;
 	bool juegoTerminado = false;
 	
+	// atributos para la animación
+	bool animandoLimpieza = false;
+	float temporizadorLimpieza = 0;
+	const float duracionLimpieza = 0.3f;
 	
 	void generarPiezaNueva();
 	void fijarPiezaEnTablero();
