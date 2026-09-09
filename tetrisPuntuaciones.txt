@@ -4,7 +4,7 @@ lkj 400
 asd 300
 klj 300
 asd 300
+saray 300
 asd 200
 meli 100
 yuli 100
-sd 100

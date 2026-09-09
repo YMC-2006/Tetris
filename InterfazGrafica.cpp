@@ -206,8 +206,15 @@ void InterfazGrafica::regresarAlMenu(){
 	}
 }
 	
-	// preguntar a la profe si cambiar de ubicacion
+	// uso primero quick sort para ordenar de menor a mayor, y despues bubble sort para ordenarlos de mayor a menor	
 void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
+	
+	// quick sort menor a mayor
+	
+	
+	
+	
+	// bubble sort para ordenar de mayor a menor
 	for(int i = 0; i < cantidad - 1; i++){
 		for(int j = 0; j < cantidad - 1 - i; j++){
 			if(jugadores[j].puntaje < jugadores[j+1].puntaje){
@@ -217,6 +224,10 @@ void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
 			}
 		}
 	}
+	
+	
+	
+	
 }
 	
 // PERSISTENCIA USANDO ARCHIVOS .TXT

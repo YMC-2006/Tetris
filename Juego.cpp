@@ -9,6 +9,7 @@ Juego::Juego(){
 	crearTablero(tablero);
 	crearCola(colaPiezas);
 	generarBolsa(colaPiezas);
+	crearPila(pilaHold);
 	generarPiezaNueva(); 
 }
 
@@ -33,6 +34,21 @@ void Juego::moverPiezaConTeclado(){
 	}
 	if(IsKeyPressed(KEY_UP) && piezaPuedeRotar(piezaActual, tablero)){
 		piezaActual.orientacion = (piezaActual.orientacion + 1) % 4;
+	}
+	
+	if(IsKeyPressed(KEY_C)){
+		if(pilaVacida(pilaHold)){
+			guardarPiezaPila(pilaHold, piezaActual.tipo);
+			generarPiezaNueva();
+		}else{
+			// sacar la pieza de hold y remplazar con la nueva
+			TipoPieza piezaGuardadaEnHold = sacarPiezaDePila(pilaHold);
+			TipoPieza tipoActual = piezaActual.tipo;
+			
+			piezaActual = { piezaGuardadaEnHold, 4, 1, 0 };
+			guardarPiezaPila(pilaHold, tipoActual);
+		}
+ 
 	}
 	
 }
@@ -96,6 +112,7 @@ void Juego::dibujarElementosJuego(){
 	dibujarTablero(tablero);
 	dibujarPieza(piezaActual);
 	dibujarTresSiguientesPiezas();
+	dibujarPiezaEnHold();
 }
 
 
@@ -120,6 +137,7 @@ void Juego::reiniciar(){
 	liberarCola(colaPiezas);
 	crearCola(colaPiezas);
 	generarBolsa(colaPiezas);
+	crearPila(pilaHold); // :D
 	juegoTerminado = false;
 	puntaje = 0;
 	temporizadorCaida = 0;
@@ -137,7 +155,7 @@ void Juego::pausar(){
 }
 
 void Juego::dibujarTresSiguientesPiezas(){
-	int tamCeldaPreview = 35;
+	int tamCelda = 35;
 	
 	int slotX[3] = {1111, 1111, 1111};
 	int slotY[3] = {360, 580, 790};
@@ -146,8 +164,19 @@ void Juego::dibujarTresSiguientesPiezas(){
 	
 	for(int i = 0; i < 3; i++){
 		TipoPieza tipo = verPieza(colaPiezas, i);
-		dibujarPiezaEnPosicion(tipo, slotX[i], slotY[i], tamCeldaPreview);
+		dibujarPiezaEnPosicion(tipo, slotX[i], slotY[i], tamCelda);
 	}
+}
+
+void Juego::dibujarPiezaEnHold(){
+	int tamCelda = 35;
+	int x = 1111;
+	int y = 130;
+	
+	if(!pilaVacida(pilaHold)){
+		dibujarPiezaEnPosicion(pilaHold.tipo, x, y + 40, tamCelda);
+	}
+	
 }
 
 bool Juego::haTerminado(){

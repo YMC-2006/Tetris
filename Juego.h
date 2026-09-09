@@ -4,6 +4,7 @@
 #include "Pieza.h"
 #include "raylib.h"
 #include "ColaPiezas.h"
+#include "PilaHold.h"
 
 class Juego{
 	
@@ -21,6 +22,7 @@ public:
 	
 private:
 	Tablero tablero;
+	PilaHold pilaHold;
 	ColaPiezas colaPiezas;
 	Pieza piezaActual;
 	Rectangle btnPausa;
@@ -37,7 +39,7 @@ private:
 	void generarPiezaNueva();
 	void fijarPiezaEnTablero();
 	void dibujarTresSiguientesPiezas();
-
+	void dibujarPiezaEnHold();
 	
 };
 #endif
