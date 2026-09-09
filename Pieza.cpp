@@ -100,24 +100,40 @@ bool posicionValida(int columna, int fila){
 		return true;
 	}
 	
-	bool piezaPuedeRotar(Pieza &pieza, Tablero &tablero){
-		int siguienteOrientacion = (pieza.orientacion + 1) % 4;
-		Offset bloques[4];
-		obtenerFormaPieza(pieza.tipo, siguienteOrientacion, bloques);
-		
-		for(int i = 0; i < 4; i++){
-			int columna = pieza.x + bloques[i].dx;
-			int fila = pieza.y + bloques[i].dy;
-		
-			if(!posicionValida(columna, fila)){
-				return false;
-			}
-			
-			Fila* nodoFila = obtenerFila(tablero, fila);
-			if(nodoFila != nullptr && nodoFila->celdas[columna] != NINGUNA){
-				return false;
-			}
-		}
+bool piezaPuedeRotar(Pieza &pieza, Tablero &tablero){
+	int siguienteOrientacion = (pieza.orientacion + 1) % 4;
+	Offset bloques[4];
+	obtenerFormaPieza(pieza.tipo, siguienteOrientacion, bloques);
 	
-		return true;
+	for(int i = 0; i < 4; i++){
+		int columna = pieza.x + bloques[i].dx;
+		int fila = pieza.y + bloques[i].dy;
+	
+		if(!posicionValida(columna, fila)){
+			return false;
+		}
+		
+		Fila* nodoFila = obtenerFila(tablero, fila);
+		if(nodoFila != nullptr && nodoFila->celdas[columna] != NINGUNA){
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void dibujarPiezaEnPosicion(TipoPieza tipo, int x, int y, int tamCelda){
+	Offset bloques[4];
+	obtenerFormaPieza(tipo, 0, bloques);   // orientación 0, la original
+	
+	Color color = colorDePieza(tipo);
+	
+	for(int i = 0; i < 4; i++){
+		int px = x + bloques[i].dx * tamCelda;
+		int py = y + bloques[i].dy * tamCelda;
+		
+		Rectangle celda = {(float)px, (float)py, (float)tamCelda, (float)tamCelda};
+		DrawRectangleRec(celda, color);
+		DrawRectangleLinesEx(celda, 1, GRAY);
+	}
 }

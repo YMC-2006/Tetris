@@ -17,5 +17,7 @@
 	bool piezaPuedeMoverse(Pieza &pieza, int dx, int dy, Tablero &tablero);
 	bool piezaPuedeRotar(Pieza &pieza, Tablero &tablero);
 	bool posicionValida(int columna, int fila);
-
+	void dibujarPiezaEnPosicion(TipoPieza tipo, int x, int y, int tamCelda);
+	
+	
 	#endif

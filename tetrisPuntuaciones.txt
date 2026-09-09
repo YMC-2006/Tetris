@@ -1,4 +1,6 @@
+sad 700
 klj 600
+lkj 400
 asd 300
 klj 300
 asd 300
@@ -6,5 +8,3 @@ asd 200
 meli 100
 yuli 100
 sd 100
-yuli 0
-yuuu 0

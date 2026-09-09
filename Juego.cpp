@@ -7,11 +7,14 @@ Juego::Juego(){
 	
 	SetRandomSeed((unsigned int)time(NULL));
 	crearTablero(tablero);
+	crearCola(colaPiezas);
+	generarBolsa(colaPiezas);
 	generarPiezaNueva(); 
 }
 
 Juego::~Juego(){
 	liberarTablero(tablero);
+	liberarCola(colaPiezas);
 }
 	
 void Juego::moverPiezaConTeclado(){
@@ -37,29 +40,10 @@ void Juego::moverPiezaConTeclado(){
 
 void Juego::generarPiezaNueva(){
 	
-	int aleatorio = GetRandomValue(0, 6);
-	TipoPieza tipo;
-	if(aleatorio == 0){
-		tipo = O;
-	}else if(aleatorio == 1){
-		tipo = T;
-	}else if(aleatorio == 2){
-		tipo = L;
-	}else if(aleatorio == 3){
-		tipo = S;
-	}else if(aleatorio == 4){
-		tipo = Z;
-	}else if(aleatorio == 5){
-		tipo = J;
-	}else if(aleatorio == 6){
-		tipo = I;
+	if(contarPiezas(colaPiezas) < 7){
+		generarBolsa(colaPiezas);
 	}
-	else{
-		//cout << "Se genero un numero fuera del rango";
-		return;
-	}
-	
-	
+	TipoPieza tipo = desencolar(colaPiezas);
 	piezaActual = { tipo, 4, 1, 0 };
 	
 }
@@ -111,6 +95,7 @@ void Juego::actualizar(){
 void Juego::dibujarElementosJuego(){
 	dibujarTablero(tablero);
 	dibujarPieza(piezaActual);
+	dibujarTresSiguientesPiezas();
 }
 
 
@@ -132,6 +117,9 @@ void Juego::fijarPiezaEnTablero(){
 void Juego::reiniciar(){
 	liberarTablero(tablero);
 	crearTablero(tablero);
+	liberarCola(colaPiezas);
+	crearCola(colaPiezas);
+	generarBolsa(colaPiezas);
 	juegoTerminado = false;
 	puntaje = 0;
 	temporizadorCaida = 0;
@@ -145,6 +133,20 @@ void Juego::pausar(){
 	if(CheckCollisionPointRec(mouse, btnPausa) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "SE PAUSO EL JUEGO");
 		
+	}
+}
+
+void Juego::dibujarTresSiguientesPiezas(){
+	int tamCeldaPreview = 35;
+	
+	int slotX[3] = {1111, 1111, 1111};
+	int slotY[3] = {360, 580, 790};
+	
+	//DrawText("Siguientes:", x, y, 20, BLACK);
+	
+	for(int i = 0; i < 3; i++){
+		TipoPieza tipo = verPieza(colaPiezas, i);
+		dibujarPiezaEnPosicion(tipo, slotX[i], slotY[i], tamCeldaPreview);
 	}
 }
 

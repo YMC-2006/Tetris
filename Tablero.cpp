@@ -53,7 +53,7 @@ Color colorDePieza(TipoPieza tipo){
 	Color verde    = {196, 224, 47,  255};  // S
 	Color rosado   = {255, 169, 221, 255};  // Z
 	Color azul     = {153, 173, 255, };  // J
-	Color naranja  = {254, 183, 0,   255};  // L
+	Color naranja  = {254, 183, 0, 255};  // L
 	
 	
 	switch(tipo){

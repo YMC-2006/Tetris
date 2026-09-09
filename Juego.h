@@ -3,6 +3,8 @@
 #include "Tablero.h"
 #include "Pieza.h"
 #include "raylib.h"
+#include "ColaPiezas.h"
+
 class Juego{
 	
 public:
@@ -19,6 +21,7 @@ public:
 	
 private:
 	Tablero tablero;
+	ColaPiezas colaPiezas;
 	Pieza piezaActual;
 	Rectangle btnPausa;
 	float temporizadorCaida = 0;
@@ -33,8 +36,8 @@ private:
 	
 	void generarPiezaNueva();
 	void fijarPiezaEnTablero();
-	
-	
+	void dibujarTresSiguientesPiezas();
+
 	
 };
 #endif
