@@ -28,6 +28,7 @@ private:
 	Rectangle btnPausa;
 	float temporizadorCaida = 0;
 	const float intervaloCaida = 0.5f;
+	const float intervaloCaidaRapida = 0.5f; // en veremos
 	int puntaje = 0;
 	bool juegoTerminado = false;
 	

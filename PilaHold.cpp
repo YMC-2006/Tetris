@@ -8,7 +8,7 @@ void crearPila(PilaHold& tope){
 	
 }
 	
-	// donde va la logica de presionar la tecla h y que se ponga en hold
+// donde va la logica de presionar la tecla h y que se ponga en hold
 void guardarPiezaPila(PilaHold& tope, TipoPieza tipo){
 	tope.tipo = tipo;
 	tope.ocupada = true;

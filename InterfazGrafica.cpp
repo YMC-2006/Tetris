@@ -92,7 +92,7 @@ void InterfazGrafica::registrarJugador(){
 
 void InterfazGrafica::mostrarFinJuego(){
 	DrawTexture(fondoFinJuego, 0, 0, WHITE);
-	DrawText(TextFormat(juego.obtenerPuntaje())," pts", anchoPantalla/2 - 130, 700, 45, BLACK);
+	DrawText(TextFormat("%d",juego.obtenerPuntaje()), anchoPantalla/2 - 130, 700, 45, BLACK);
 	
 	// tamaño y posición para el botón
 	Rectangle btnHogarRect = { 600, 840, 100, 80 }; // x, y, ancho, alto
@@ -247,14 +247,7 @@ void InterfazGrafica::regresarAlMenu(){
 	}
 }
 	
-	// uso primero quick sort para ordenar de menor a mayor, y despues bubble sort para ordenarlos de mayor a menor	
 void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
-	
-	// quick sort menor a mayor
-	
-	
-	
-	
 	// bubble sort para ordenar de mayor a menor
 	for(int i = 0; i < cantidad - 1; i++){
 		for(int j = 0; j < cantidad - 1 - i; j++){
@@ -265,10 +258,6 @@ void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
 			}
 		}
 	}
-	
-	
-	
-	
 }
 	
 // PERSISTENCIA USANDO ARCHIVOS .TXT
@@ -320,12 +309,9 @@ void guardarSiCalifica(Jugador jugador){
 void InterfazGrafica::mostrarPuntuaciones(){
 	DrawTexture(fondoTopJugadores, 0, 0, WHITE);
 	regresarAlMenu();
-		
 	Jugador jugadores[10];
 	int cantidad = cargarPuntuaciones(jugadores, 10);
 	ordenarPuntuaciones(jugadores, cantidad);
-	
-	
 	for(int i = 0; i < cantidad; i++){
 		DrawText(jugadores[i].nombre.c_str(), 500, 410 + i * 50, 25, BLACK);
 		DrawText(TextFormat("%d", jugadores[i].puntaje), 850, 410 + i * 50, 25, BLACK);
