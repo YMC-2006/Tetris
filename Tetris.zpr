@@ -41,7 +41,7 @@ cursor=147:23
 open=true
 [source]
 path=ColaPiezas.cpp
-cursor=96:46
+cursor=72:26
 open=true
 [header]
 path=Pieza.h

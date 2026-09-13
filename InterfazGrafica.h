@@ -20,6 +20,17 @@ private:
 	Texture2D fondoTopJugadores;
 	Texture2D fondoJuego;
 	Texture2D fondoPausa;
+	Texture2D fondoFinJuego;
+	
+	
+	// botones
+	Texture2D btnHogar; // para regresar al menu
+	Texture2D btnJugarDeNuevo;
+	Texture2D btnPausarJuego;
+	Texture2D musicaON;
+	//Texture2D musicaOFF;
+	
+	
 	Music musica;
 	bool musicaActiva = false;
 	bool juegoPausado = false;
@@ -32,6 +43,7 @@ private:
 	void mostrarPuntuaciones();
 	void mostrarCreditos();
 	void mostrarJuego();
+	void mostrarReglasJuego();
 	void mostrarVistaPausa();
 	void regresarAlMenu();
 	void mostrarFinJuego();

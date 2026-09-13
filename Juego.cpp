@@ -35,6 +35,9 @@ void Juego::moverPiezaConTeclado(){
 	if(IsKeyPressed(KEY_UP) && piezaPuedeRotar(piezaActual, tablero)){
 		piezaActual.orientacion = (piezaActual.orientacion + 1) % 4;
 	}
+//	if(IsKeyDown(KEY_DOWN)&& piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
+//		piezaActual.y++;
+//	}
 	
 	if(IsKeyPressed(KEY_C)){
 		if(pilaVacida(pilaHold)){

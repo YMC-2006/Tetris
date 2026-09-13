@@ -25,6 +25,16 @@ void InterfazGrafica::cargarAssets(){
 	fondoTopJugadores = LoadTexture("assets/fondoTopJugadores.png");
 	fondoJuego = LoadTexture("assets/JuegoFondo.png");
 	fondoPausa = LoadTexture("assets/fondoPausa.png");
+	fondoFinJuego = LoadTexture("assets/fondoFinJuego.png");
+	
+	
+	// botones
+	btnHogar = 	LoadTexture("assets/btnHogar.png");
+	btnJugarDeNuevo = LoadTexture("assets/btnReplay.png");
+	btnPausarJuego = LoadTexture("assets/btnPausa.png");
+	//btnMusicaON = LoadTexture("assets/musicaON.png");
+	
+	
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 }
 	
@@ -34,6 +44,12 @@ void InterfazGrafica::liberarAssets(){
 	UnloadTexture(fondoCreditos);
 	UnloadTexture(fondoRegistroJugador);
 	UnloadTexture(fondoTopJugadores);
+	UnloadTexture(fondoPausa);
+	
+	//liberar btns
+	UnloadTexture(btnHogar);
+	
+	UnloadTexture(fondoFinJuego);
 }
 	
 
@@ -75,14 +91,26 @@ void InterfazGrafica::registrarJugador(){
 
 
 void InterfazGrafica::mostrarFinJuego(){
-	DrawText("FIN DEL JUEGO", anchoPantalla/2 - 150, 200, 40, RED);
-	DrawText(TextFormat("Puntaje final: %d", juego.obtenerPuntaje()), anchoPantalla/2 - 130, 270, 30, BLACK);
+	DrawTexture(fondoFinJuego, 0, 0, WHITE);
+	DrawText(TextFormat(juego.obtenerPuntaje())," pts", anchoPantalla/2 - 130, 700, 45, BLACK);
 	
-	Rectangle botonJugar = {anchoPantalla/2.0f - 100, 350, 200, 50};
-	DrawRectangleRec(botonJugar, LIGHTGRAY);
-	DrawText("Jugar de nuevo", (int)botonJugar.x + 20, (int)botonJugar.y + 15, 20, BLACK);
+	// tamaño y posición para el botón
+	Rectangle btnHogarRect = { 600, 840, 100, 80 }; // x, y, ancho, alto
+	Rectangle origenHogar = { 0, 0, (float)btnHogar.width, (float)btnHogar.height };
+	DrawTexturePro(btnHogar, origenHogar, btnHogarRect, {0, 0}, 0.0f, WHITE);
 	
-	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botonJugar)){
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), btnHogarRect)) {
+		pantallaActual = MENU; // o la pantalla que corresponda para "ir al hogar"
+		juego.reiniciar();
+	}
+	
+	Rectangle btnJugarRect = {730, 840,  100, 90};
+	Rectangle origenJugar = {0, 0, (float)btnJugarDeNuevo.width, (float)btnJugarDeNuevo.height };
+	DrawTexturePro(btnJugarDeNuevo, origenJugar, btnJugarRect, {0,0}, 0.0f, WHITE);
+	
+
+	
+	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), btnJugarRect)){
 		juego.reiniciar();
 		pantallaActual = JUEGO;
 	}
@@ -136,6 +164,7 @@ void InterfazGrafica::mostrarMenu(){
 	Rectangle btnJugar = {600, 500, 260, 60};
 	Rectangle btnCreditos = {605, 600, 250, 60};
 	Rectangle btnMejoresPts = {540, 700, 380, 60};
+	Rectangle btnReglas = {590, 800, 270, 60};
 	Rectangle btnSonidoOn = {100, 100, 30, 30};
 		
 	Vector2 mouse = GetMousePosition();
@@ -152,6 +181,11 @@ void InterfazGrafica::mostrarMenu(){
 	if(CheckCollisionPointRec(mouse, btnMejoresPts) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Mejores pts presionado");
 		pantallaActual = PUNTUACIONES;
+	}
+	
+	if(CheckCollisionPointRec(mouse, btnReglas) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		TraceLog(LOG_INFO, "Reglas btn presionado");
+		pantallaActual = REGLAS_JUEGO;
 	}
 
 		// SONIDO
@@ -171,29 +205,36 @@ void InterfazGrafica::mostrarMenu(){
 		DrawRectangleRec(btnSonidoOn, BLUE);
 	}
 		
-	// Hover
+	// Hover JUGAR
 	if (CheckCollisionPointRec(mouse, btnJugar)){
 		DrawRectangleRec(btnJugar, verde);
 	}else{
 		DrawRectangleRec(btnJugar, rosado);
 	}
-	DrawText("Jugar", 670, 520, 30, WHITE);
+	DrawText("Jugar", 680, 520, 30, WHITE);
 	
-	// Hover
+	// Hover CREDITOS
 	if (CheckCollisionPointRec(mouse, btnCreditos)){
 		DrawRectangleRec(btnCreditos, verde);
 	}else{
 		DrawRectangleRec(btnCreditos, naranja);
 	}
-	DrawText("Creditos", 650, 620, 30, WHITE);
-
-		// Hover
+	DrawText("Creditos", 660, 610, 30, WHITE);
+	
+	// Hover MEJORES PUNTUACIONES
 	if(CheckCollisionPointRec(mouse, btnMejoresPts)){
 		DrawRectangleRec(btnMejoresPts, verde);
 	}else{
 		DrawRectangleRec(btnMejoresPts, aqua);
 	}
 	DrawText("Mejores Puntuaciones", 600, 720, 25, WHITE);
+	
+	if(CheckCollisionPointRec(mouse, btnReglas)){
+		DrawRectangleRec(btnReglas, verde);
+	}else{
+		DrawRectangleRec(btnReglas, rosado);
+	}
+	DrawText("Reglas Juego", 640, 820, 25, WHITE);
 }
 	
 void InterfazGrafica::regresarAlMenu(){
@@ -294,7 +335,6 @@ void InterfazGrafica::mostrarPuntuaciones(){
 void InterfazGrafica::mostrarCreditos(){
 		DrawTexture(fondoCreditos, 0, 0, WHITE);
 		regresarAlMenu();
-		DrawText("Creditos", 500, 50, 40, BLUE);
 }
 		
 void InterfazGrafica::mostrarJuego(){
@@ -328,11 +368,20 @@ void InterfazGrafica::mostrarJuego(){
 	
 	juego.dibujarElementosJuego();
 	DrawText(TextFormat("Puntaje: %d", juego.obtenerPuntaje()), 50, 50, 25, BLACK);
+	DrawText("HOLD", 1090, 90, 35, PINK);
 	juego.moverPiezaConTeclado();
 	juego.actualizar();
 
 }
-		
+	
+
+void InterfazGrafica::mostrarReglasJuego(){
+	regresarAlMenu();
+	DrawText("Creditos", 500, 50, 40, BLUE);
+}
+
+
+
 void InterfazGrafica::ejecutar(){
 		
 		if( !juegoPausado ){
@@ -356,6 +405,8 @@ void InterfazGrafica::ejecutar(){
 					mostrarCreditos();
 				}else if(pantallaActual == FIN_JUEGO){
 					mostrarFinJuego(); 
+				}else if(pantallaActual == REGLAS_JUEGO){
+					mostrarReglasJuego();
 				}
 				EndDrawing();
 			}
