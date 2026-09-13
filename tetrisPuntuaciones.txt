@@ -1,10 +1,10 @@
+ll 900
 sad 700
+asd 700
 klj 600
 lkj 400
 kj 400
+ll 400
 asd 300
 klj 300
 asd 300
-saray 300
-gfd 300
-asd 200

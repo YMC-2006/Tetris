@@ -10,12 +10,55 @@ Juego::Juego(){
 	crearCola(colaPiezas);
 	generarBolsa(colaPiezas);
 	crearPila(pilaHold);
+	programarEventosIniciales();
 	generarPiezaNueva(); 
 }
 
 Juego::~Juego(){
 	liberarTablero(tablero);
 	liberarCola(colaPiezas);
+	liberarColaEventos(colaEventos);
+}
+
+	
+void Juego::reiniciar(){
+	liberarTablero(tablero);
+	crearTablero(tablero);
+	liberarCola(colaPiezas);
+	crearCola(colaPiezas);
+	generarBolsa(colaPiezas);
+	crearPila(pilaHold); // :D
+	
+	// reiniciamos todo lo relacionado con la cola de eventos
+	liberarColaEventos(colaEventos);
+	programarEventosIniciales();
+	intervaloCaida = 0.5f;
+	tiempoJuego = 0;
+	puntosDoblesActivo = false;
+	piezaFacilPendiente = false;
+	
+	juegoTerminado = false;
+	puntaje = 0;
+	temporizadorCaida = 0;
+	generarPiezaNueva();
+}
+
+
+void Juego::dibujarElementosJuego(){
+	dibujarTablero(tablero);
+	dibujarPieza(piezaActual);
+	dibujarTresSiguientesPiezas();
+	dibujarPiezaEnHold();
+}
+
+	
+	
+// COLA DE EVENTOOS
+void Juego::programarEventosIniciales(){
+	crearColaEventos(colaEventos);
+	programarEvento(colaEventos, AUMENTAR_VELOCIDAD, 20.0f);
+	programarEvento(colaEventos, PUNTOS_DOBLES, 25.0f);
+	programarEvento(colaEventos, PIEZA_FACIL, 30.0f);
 }
 	
 void Juego::moverPiezaConTeclado(){
@@ -60,7 +103,17 @@ void Juego::generarPiezaNueva(){
 	if(contarPiezas(colaPiezas) < 7){
 		generarBolsa(colaPiezas);
 	}
-	TipoPieza tipo = desencolar(colaPiezas);
+	
+	
+	TipoPieza tipo;
+	
+	if(piezaFacilPendiente){
+		tipo = T;
+		piezaFacilPendiente = false;
+	}else{
+		tipo = desencolar(colaPiezas);
+		
+	}
 	piezaActual = { tipo, 4, 1, 0 };
 	
 }
@@ -86,6 +139,23 @@ void Juego::actualizar(){
 		return;   // pase o no el timer, no sigas a la lógica de caída normal
 	}
 	
+	// eventos !! :D
+	
+	tiempoJuego += GetFrameTime();
+	
+	if(hayEventoListo(colaEventos, tiempoJuego)){
+		TipoEvento tipo = extraerEvento(colaEventos);
+		aplicarEvento(tipo);
+	}
+	
+	if(puntosDoblesActivo){
+		tiempoRestantePuntosDobles -= GetFrameTime();
+		if(tiempoRestantePuntosDobles <= 0){
+			puntosDoblesActivo = false;
+		}
+	}
+	
+	
 	
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		
@@ -110,13 +180,6 @@ void Juego::actualizar(){
 	}
 }
 
-	
-void Juego::dibujarElementosJuego(){
-	dibujarTablero(tablero);
-	dibujarPieza(piezaActual);
-	dibujarTresSiguientesPiezas();
-	dibujarPiezaEnHold();
-}
 
 
 void Juego::fijarPiezaEnTablero(){
@@ -134,18 +197,6 @@ void Juego::fijarPiezaEnTablero(){
 	}
 }
 
-void Juego::reiniciar(){
-	liberarTablero(tablero);
-	crearTablero(tablero);
-	liberarCola(colaPiezas);
-	crearCola(colaPiezas);
-	generarBolsa(colaPiezas);
-	crearPila(pilaHold); // :D
-	juegoTerminado = false;
-	puntaje = 0;
-	temporizadorCaida = 0;
-	generarPiezaNueva();
-}
 
 void Juego::pausar(){
 	btnPausa = {100, 100, 50, 20};
@@ -156,6 +207,7 @@ void Juego::pausar(){
 		
 	}
 }
+
 
 void Juego::dibujarTresSiguientesPiezas(){
 	int tamCelda = 35;
@@ -181,6 +233,35 @@ void Juego::dibujarPiezaEnHold(){
 	}
 	
 }
+
+void Juego::aplicarEvento(TipoEvento tipo){
+	TraceLog(LOG_INFO, TextFormat("Evento: %d", tipo));
+	if(tipo == AUMENTAR_VELOCIDAD){
+		if(intervaloCaida > 0.15f){
+			intervaloCaida -= 0.05f;
+		}
+		programarEvento(colaEventos, AUMENTAR_VELOCIDAD, tiempoJuego + 20.0f);
+		mostrandoMensajeEvento = true;
+		
+	}else if(tipo == PUNTOS_DOBLES){
+		puntosDoblesActivo = true;
+		tiempoRestantePuntosDobles = 10.0f;
+		programarEvento(colaEventos, PUNTOS_DOBLES, tiempoJuego + 25.0f);
+		mostrandoMensajeEvento = true;
+	}else if(tipo == PIEZA_FACIL){
+		piezaFacilPendiente = true;
+		programarEvento(colaEventos, PIEZA_FACIL, tiempoJuego + 30.0f);
+		mostrandoMensajeEvento = true;
+	}
+}
+
+
+void Juego::dibujarMensajeEvento(){
+	if(){
+		
+	}
+}
+
 
 bool Juego::haTerminado(){
 	return juegoTerminado;

@@ -1,0 +1,7 @@
+#ifndef TIPOEVENTO_H
+#define TIPOEVENTO_H
+
+enum TipoEvento {AUMENTAR_VELOCIDAD, PUNTOS_DOBLES, PIEZA_FACIL};
+
+#endif
+

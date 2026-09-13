@@ -2,10 +2,8 @@
 #include "raylib.h"
 
 void crearPila(PilaHold& tope){
-
 	tope.ocupada = false;
 	tope.tipo = NINGUNA;
-	
 }
 	
 // donde va la logica de presionar la tecla h y que se ponga en hold

@@ -326,7 +326,6 @@ void InterfazGrafica::mostrarCreditos(){
 void InterfazGrafica::mostrarJuego(){
 	
 	DrawTexture(fondoJuego, 0, 0, WHITE);
-	regresarAlMenu();
 	
 	Rectangle btnPausa = {100, 100, 50, 20};
 	DrawRectangleRec(btnPausa, RED);
@@ -380,12 +379,14 @@ void InterfazGrafica::ejecutar(){
 				
 				
 				if(pantallaActual == MENU){
+					juego.reiniciar();
 					mostrarMenu();
 				}else if(pantallaActual == REGISTRO_JUGADOR){
 					registrarJugador();
 				}else if(pantallaActual == PUNTUACIONES){
 					mostrarPuntuaciones();
 				}else if(pantallaActual == JUEGO){
+					
 					mostrarJuego();
 				}else if(pantallaActual == CREDITOS){
 					mostrarCreditos();
