@@ -44,7 +44,7 @@ private:
 	bool mostrandoMensajeEvento = false;
 	TipoEvento eventoMostrado;
 	float tiempoMensajeEvento = 0;
-	const float duracionMensajeEvento = 2.5f;
+	float duracionMensajeEvento = puntosDoblesActivo ? 10.0f : 2.5f;
 	
 	void dibujarMensajeEvento();
 	void aplicarEvento(TipoEvento tipo);

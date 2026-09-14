@@ -49,6 +49,7 @@ void Juego::dibujarElementosJuego(){
 	dibujarPieza(piezaActual);
 	dibujarTresSiguientesPiezas();
 	dibujarPiezaEnHold();
+	dibujarMensajeEvento();
 }
 
 	
@@ -155,7 +156,12 @@ void Juego::actualizar(){
 		}
 	}
 	
-	
+	if(mostrandoMensajeEvento){
+		tiempoMensajeEvento -= GetFrameTime();
+		if(tiempoMensajeEvento <= 0){
+			mostrandoMensajeEvento = false;
+		}
+	}
 	
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		
@@ -235,33 +241,47 @@ void Juego::dibujarPiezaEnHold(){
 }
 
 void Juego::aplicarEvento(TipoEvento tipo){
-	TraceLog(LOG_INFO, TextFormat("Evento: %d", tipo));
 	if(tipo == AUMENTAR_VELOCIDAD){
+		mostrandoMensajeEvento = true;
+		eventoMostrado = tipo;
+		tiempoMensajeEvento = duracionMensajeEvento;
+		
 		if(intervaloCaida > 0.15f){
 			intervaloCaida -= 0.05f;
 		}
 		programarEvento(colaEventos, AUMENTAR_VELOCIDAD, tiempoJuego + 20.0f);
-		mostrandoMensajeEvento = true;
 		
 	}else if(tipo == PUNTOS_DOBLES){
 		puntosDoblesActivo = true;
 		tiempoRestantePuntosDobles = 10.0f;
-		programarEvento(colaEventos, PUNTOS_DOBLES, tiempoJuego + 25.0f);
-		mostrandoMensajeEvento = true;
+		programarEvento(colaEventos, PUNTOS_DOBLES, tiempoJuego + 40.0f);
+		
 	}else if(tipo == PIEZA_FACIL){
-		piezaFacilPendiente = true;
-		programarEvento(colaEventos, PIEZA_FACIL, tiempoJuego + 30.0f);
 		mostrandoMensajeEvento = true;
+		eventoMostrado = tipo;
+		tiempoMensajeEvento = duracionMensajeEvento;
+		
+		piezaFacilPendiente = true;
+		programarEvento(colaEventos, PIEZA_FACIL, tiempoJuego + 60.0f);
 	}
 }
 
 
 void Juego::dibujarMensajeEvento(){
-	if(){
-		
+	if(mostrandoMensajeEvento){
+		const char* texto;
+		if(eventoMostrado == AUMENTAR_VELOCIDAD){
+			texto = "Velocidad aumentada!";
+		}else{
+			texto = "Pieza facil de regalo!";
+		}
+		DrawText(texto, 450, 50, 30, RED);
+	}
+	
+	if(puntosDoblesActivo){
+		DrawText("Puntos dobles activos!", 450, 50, 30, ORANGE);
 	}
 }
-
 
 bool Juego::haTerminado(){
 	return juegoTerminado;
