@@ -1,5 +1,6 @@
 #include "InterfazGrafica.h"
 #include <fstream>
+#include <ctime>
 using namespace std;
 InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	
@@ -26,7 +27,7 @@ void InterfazGrafica::cargarAssets(){
 	fondoJuego = LoadTexture("assets/JuegoFondo.png");
 	fondoPausa = LoadTexture("assets/fondoPausa.png");
 	fondoFinJuego = LoadTexture("assets/fondoFinJuego.png");
-	
+	fondoElegirOrdenamientos = LoadTexture("assets/fondoElegirOrdenamientos.png");
 	
 	// botones
 	btnHogar = 	LoadTexture("assets/btnHogar.png");
@@ -36,6 +37,7 @@ void InterfazGrafica::cargarAssets(){
 	
 	
 	musica = LoadMusicStream("assets/FrozenPines.wav");
+	compararOrdenamientos();
 }
 	
 void InterfazGrafica::liberarAssets(){
@@ -45,6 +47,7 @@ void InterfazGrafica::liberarAssets(){
 	UnloadTexture(fondoRegistroJugador);
 	UnloadTexture(fondoTopJugadores);
 	UnloadTexture(fondoPausa);
+	UnloadTexture(fondoElegirOrdenamientos);
 	
 	//liberar btns
 	UnloadTexture(btnHogar);
@@ -180,7 +183,7 @@ void InterfazGrafica::mostrarMenu(){
 	
 	if(CheckCollisionPointRec(mouse, btnMejoresPts) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Mejores pts presionado");
-		pantallaActual = PUNTUACIONES;
+		pantallaActual = ELEGIR_ORDENAMIENTO;
 	}
 	
 	if(CheckCollisionPointRec(mouse, btnReglas) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -246,8 +249,68 @@ void InterfazGrafica::regresarAlMenu(){
 		pantallaActual = MENU;
 	}
 }
+
 	
-void ordenarPuntuaciones(Jugador jugadores[], int cantidad){
+void mezclar(Jugador jugadores[], int inicio, int medio, int fin){
+	
+	int tamIzquierda = medio - inicio + 1;
+	int tamDerecha = fin - medio;
+	
+	Jugador* izquierda = new Jugador[tamIzquierda];
+	Jugador* derecha = new Jugador[tamDerecha];
+	
+	for(int i = 0; i < tamIzquierda; i++){
+		izquierda[i] = jugadores[inicio + i];
+	}
+	for(int j = 0; j < tamDerecha; j++){
+		derecha[j] = jugadores[medio + 1 + j];
+	}
+	
+	int i = 0, j = 0, k = inicio;
+	
+	// revisamos la condicion para hacer el merging
+	while(i < tamIzquierda && j < tamDerecha){
+		if(izquierda[i].puntaje >= derecha[j].puntaje){
+			jugadores[k] = izquierda[i];
+			i++;
+		}else{
+			jugadores[k] = derecha[j];
+			j++;
+		}
+		k++;
+	}
+	
+	while(i < tamIzquierda){
+		jugadores[k] = izquierda[i];
+		i++;
+		k++;
+	}
+	
+	while(j < tamDerecha){
+		jugadores[k] = derecha[j];
+		j++;
+		k++;
+	}
+	
+	delete[] izquierda;
+	delete[] derecha;
+	
+}
+	
+	
+void mergeSort(Jugador jugadores[], int inicio, int fin){
+	if(inicio >= fin){
+		return;   // caso base 0 o 1 elemento, ya está ordenado
+	}
+	
+	int medio = (inicio + fin) / 2;
+	
+	mergeSort(jugadores, inicio, medio);       // ordena la mitad izquierda
+	mergeSort(jugadores, medio + 1, fin);      // ordena la mitad derecha
+	mezclar(jugadores, inicio, medio, fin);    // mezcla ambas ya ordenadas
+}
+
+void bubbleSort(Jugador jugadores[], int cantidad){
 	// bubble sort para ordenar de mayor a menor
 	for(int i = 0; i < cantidad - 1; i++){
 		for(int j = 0; j < cantidad - 1 - i; j++){
@@ -296,7 +359,7 @@ void guardarSiCalifica(Jugador jugador){
 	int cantidad = cargarPuntuaciones(jugadores, 10);
 	jugadores[cantidad] = jugador;
 	cantidad++;
-	ordenarPuntuaciones(jugadores, cantidad);
+	//mergeSort(jugadores, 0, cantidad - 1);
 	if(cantidad > 10){
 		cantidad = 10;
 	}
@@ -304,14 +367,47 @@ void guardarSiCalifica(Jugador jugador){
 }
 	
 	
-
+void InterfazGrafica::mostrarPantallaElegirOrdenamiento(){
+	DrawTexture(fondoElegirOrdenamientos, 0, 0, WHITE);
+	Rectangle btnMergeSort = {300, 400, 300, 100};
+	DrawRectangleRec(btnMergeSort, PINK);
+	DrawText("Merge Sort", 320, 440, 35, WHITE);
+	
+	Rectangle btnBubbleSort = {700, 400, 300, 100};
+	DrawRectangleRec(btnBubbleSort, PURPLE);
+	DrawText("Bubble Sort", 720, 440, 35, WHITE);
+	
+	Vector2 mouse = GetMousePosition();
+	
+	if(CheckCollisionPointRec(mouse, btnMergeSort)&& IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		TraceLog(LOG_INFO, "Btn merge sort presionado");
+		ordenamientoSimple = false;
+		pantallaActual = PUNTUACIONES;
+	}
+	
+	if(CheckCollisionPointRec(mouse, btnBubbleSort)&& IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		TraceLog(LOG_INFO, "Btn bubble sort presionado");
+		ordenamientoSimple = true;
+		pantallaActual = PUNTUACIONES;
+	}
+	
+	
+}
 		
 void InterfazGrafica::mostrarPuntuaciones(){
+	
 	DrawTexture(fondoTopJugadores, 0, 0, WHITE);
 	regresarAlMenu();
 	Jugador jugadores[10];
 	int cantidad = cargarPuntuaciones(jugadores, 10);
-	ordenarPuntuaciones(jugadores, cantidad);
+	if(ordenamientoSimple){
+		bubbleSort(jugadores, cantidad);
+		//TraceLog(LOG_INFO, "Ordenado con bubble sort");
+	}else{
+		mergeSort(jugadores, 0 , cantidad -1);
+		//TraceLog(LOG_INFO, "Ordenado con merge sort");
+	}
+	
 	for(int i = 0; i < cantidad; i++){
 		DrawText(jugadores[i].nombre.c_str(), 500, 410 + i * 50, 25, BLACK);
 		DrawText(TextFormat("%d", jugadores[i].puntaje), 850, 410 + i * 50, 25, BLACK);
@@ -383,10 +479,11 @@ void InterfazGrafica::ejecutar(){
 					mostrarMenu();
 				}else if(pantallaActual == REGISTRO_JUGADOR){
 					registrarJugador();
+				}else if(pantallaActual == ELEGIR_ORDENAMIENTO){
+					mostrarPantallaElegirOrdenamiento();
 				}else if(pantallaActual == PUNTUACIONES){
 					mostrarPuntuaciones();
 				}else if(pantallaActual == JUEGO){
-					
 					mostrarJuego();
 				}else if(pantallaActual == CREDITOS){
 					mostrarCreditos();
@@ -401,4 +498,54 @@ void InterfazGrafica::ejecutar(){
 			
 		}
 		
+}
+
+
+
+
+
+void generarDatosPrueba(Jugador jugadores[], int cantidad){
+	for(int i = 0; i < cantidad; i++){
+		jugadores[i].nombre = "Prueba" + std::to_string(i);
+		jugadores[i].puntaje = GetRandomValue(0, 999999);
+	}
+}
+	
+void copiarArreglo(Jugador origen[], Jugador destino[], int cantidad){
+	for(int i = 0; i < cantidad; i++){
+		destino[i] = origen[i];
+	}
+}
+		
+void InterfazGrafica::compararOrdenamientos(){
+	int tamanos[] = {10, 100, 1000, 10000};
+
+	
+	for(int t = 0; t < 4; t++){
+		int n = tamanos[t];
+		
+		Jugador* original = new Jugador[n];
+		Jugador* copiaBubble = new Jugador[n];
+		Jugador* copiaMerge = new Jugador[n];
+		
+		generarDatosPrueba(original, n);
+		copiarArreglo(original, copiaBubble, n);
+		copiarArreglo(original, copiaMerge, n);
+	
+		clock_t inicioBubble = clock();
+		bubbleSort(copiaBubble, n);
+		clock_t finBubble = clock();
+		double tiempoBubble = (double)(finBubble - inicioBubble) / CLOCKS_PER_SEC;
+			
+		clock_t inicioMerge = clock();
+		mergeSort(copiaMerge, 0, n - 1);
+		clock_t finMerge = clock();
+		double tiempoMerge = (double)(finMerge - inicioMerge) / CLOCKS_PER_SEC;
+			
+		TraceLog(LOG_INFO, TextFormat("n=%d | burbuja: %f s | merge: %f s", n, tiempoBubble, tiempoMerge));
+			
+			delete[] original;
+			delete[] copiaBubble;
+			delete[] copiaMerge;
+		}
 }

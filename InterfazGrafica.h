@@ -21,7 +21,9 @@ private:
 	Texture2D fondoJuego;
 	Texture2D fondoPausa;
 	Texture2D fondoFinJuego;
+	Texture2D fondoElegirOrdenamientos;
 	
+	bool ordenamientoSimple = false;
 	
 	// botones
 	Texture2D btnHogar; // para regresar al menu
@@ -29,7 +31,6 @@ private:
 	Texture2D btnPausarJuego;
 	Texture2D musicaON;
 	//Texture2D musicaOFF;
-	
 	
 	Music musica;
 	bool musicaActiva = false;
@@ -40,6 +41,7 @@ private:
 	
 	void registrarJugador();
 	void mostrarMenu();
+	void mostrarPantallaElegirOrdenamiento();
 	void mostrarPuntuaciones();
 	void mostrarCreditos();
 	void mostrarJuego();
@@ -52,6 +54,8 @@ public:
 	InterfazGrafica(int ancho, int alto,const char* titulo);
 	~InterfazGrafica(); // destructor :p
 	void ejecutar(); // contiene el bucle while
+	
+	void compararOrdenamientos();
 
 };
 
