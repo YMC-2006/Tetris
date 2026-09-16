@@ -27,6 +27,7 @@ private:
 	
 	// botones
 	Texture2D btnHogar; // para regresar al menu
+	//Texture2D btnReplay;
 	Texture2D btnJugarDeNuevo;
 	Texture2D btnPausarJuego;
 	Texture2D musicaON;
@@ -42,7 +43,7 @@ private:
 	Tablero tableroReplay;
 	int pasoReplay;
 	int totalPasosReplay;
-	Rectangle btnVerReplay;
+	Texture2D btnReplay;
 	Rectangle btnReplayAtras;
 	Rectangle btnReplayAdelante;
 	Rectangle btnReplayRepetir;

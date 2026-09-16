@@ -18,11 +18,11 @@ InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	crearTablero(tableroReplay);
 	pasoReplay = 0;
 	totalPasosReplay = 0;
-	btnVerReplay       = { 400, 500, 250, 60 };
-	btnReplayAtras     = { 900, 300, 180, 50 };
-	btnReplayAdelante  = { 320, 700, 180, 50 };
-	btnReplayRepetir   = { 520, 700, 180, 50 };
-	btnReplayVolver    = { 720, 700, 180, 50 };
+	//btnReplay       = { 400, 500, 250, 60 };
+	btnReplayAtras     = { 1100, 200, 180, 50 };
+	btnReplayAdelante  = { 1100, 300, 180, 50 };
+	btnReplayRepetir   = { 1100, 400, 180, 50 };
+	btnReplayVolver    = { 1100, 500, 180, 50 };
 }
 
 InterfazGrafica::~InterfazGrafica(){
@@ -45,6 +45,7 @@ void InterfazGrafica::cargarAssets(){
 	btnHogar = 	LoadTexture("assets/btnHogar.png");
 	btnJugarDeNuevo = LoadTexture("assets/btnReplay.png");
 	btnPausarJuego = LoadTexture("assets/btnPausa.png");
+	btnReplay = LoadTexture("assets/btnVerReplay.png");
 	//btnMusicaON = LoadTexture("assets/musicaON.png");
 	
 	
@@ -132,12 +133,17 @@ void InterfazGrafica::mostrarFinJuego(){
 		pantallaActual = JUEGO;
 	}
 	
-	// para el replay
-	DrawRectangleRec(btnVerReplay, LIGHTGRAY);
-	DrawText("Ver replay", (int)btnVerReplay.x + 45, (int)btnVerReplay.y + 18, 25, BLACK);
+	Rectangle btnReplayRect = {900, 840, 100, 80};
+	Rectangle origenReplay = {0, 0, (float)btnReplay.width, (float)btnReplay.height};
+	DrawTexturePro(btnReplay, origenReplay, btnReplayRect, {0,0}, 0.0f, WHITE);
+		
 	
+	// para el replay
+//	DrawRectangleRec(btnVerReplay, LIGHTGRAY);
+//	DrawText("Ver replay", (int)btnVerReplay.x + 45, (int)btnVerReplay.y + 18, 25, BLACK);
+//	
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
-	   CheckCollisionPointRec(GetMousePosition(), btnVerReplay)){
+	   CheckCollisionPointRec(GetMousePosition(), btnReplayRect)){
 		totalPasosReplay = contarColocaciones();
 		pasoReplay = 0;
 		reconstruirReplay(0);
@@ -578,18 +584,25 @@ void InterfazGrafica::reconstruirReplay(int hastaPaso){
 }
 	
 void InterfazGrafica::mostrarReplay(){
-	DrawText("REPLAY", 460, 30, 45, PINK);
+	
+	Color colorRosadoOsc = {227, 108, 125, 255};
+	Color colorVerdeClaro = {203, 221, 118, 255};
+	Color colorMoradoOsc = {201, 159, 192, 255};
+	Color colorRosadoClaro = {236, 180, 201, 255};
+	
+	DrawText("REPLAY", 600, 30, 50, PINK);
 	dibujarTablero(tableroReplay);
 	DrawText(TextFormat("Pieza %d de %d", pasoReplay, totalPasosReplay), 100, 120, 25, BLACK);
+	//DrawText(TextFormat("Num pieza %", pasoReplay), 200, 130, 24, BLACK);
 	
-	DrawRectangleRec(btnReplayAtras, LIGHTGRAY);
-	DrawText("<< Atras", (int)btnReplayAtras.x + 35, (int)btnReplayAtras.y + 15, 20, BLACK);
-	DrawRectangleRec(btnReplayAdelante, LIGHTGRAY);
-	DrawText("Adelante >>", (int)btnReplayAdelante.x + 20, (int)btnReplayAdelante.y + 15, 20, BLACK);
-	DrawRectangleRec(btnReplayRepetir, LIGHTGRAY);
-	DrawText("Repetir", (int)btnReplayRepetir.x + 45, (int)btnReplayRepetir.y + 15, 20, BLACK);
-	DrawRectangleRec(btnReplayVolver, LIGHTGRAY);
-	DrawText("Volver", (int)btnReplayVolver.x + 50, (int)btnReplayVolver.y + 15, 20, BLACK);
+	DrawRectangleRec(btnReplayAtras, colorRosadoOsc);
+	DrawText("<< Atras", (int)btnReplayAtras.x + 35, (int)btnReplayAtras.y + 15, 20, WHITE);
+	DrawRectangleRec(btnReplayAdelante, colorVerdeClaro);
+	DrawText("Adelante >>", (int)btnReplayAdelante.x + 20, (int)btnReplayAdelante.y + 15, 20, WHITE);
+	DrawRectangleRec(btnReplayRepetir, colorMoradoOsc);
+	DrawText("Repetir", (int)btnReplayRepetir.x + 45, (int)btnReplayRepetir.y + 15, 20, WHITE);
+	DrawRectangleRec(btnReplayVolver, colorRosadoClaro);
+	DrawText("Volver", (int)btnReplayVolver.x + 50, (int)btnReplayVolver.y + 15, 20, WHITE);
 		
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		Vector2 mouse = GetMousePosition();
