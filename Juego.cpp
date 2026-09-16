@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Tablero.h"
 #include <ctime> 
+#include "ListaReplay.h"
 
 Juego::Juego(){
 	
@@ -11,6 +12,9 @@ Juego::Juego(){
 	generarBolsa(colaPiezas);
 	crearPila(pilaHold);
 	programarEventosIniciales();
+	crearListaReplay(historialReplay);
+	btnDeshacer = { 50, 620, 140, 45 };
+	btnRehacer  = { 200, 620, 140, 45 };
 	generarPiezaNueva(); 
 }
 
@@ -18,6 +22,7 @@ Juego::~Juego(){
 	liberarTablero(tablero);
 	liberarCola(colaPiezas);
 	liberarColaEventos(colaEventos);
+	liberarListaReplay(historialReplay);
 }
 
 	
@@ -40,6 +45,10 @@ void Juego::reiniciar(){
 	juegoTerminado = false;
 	puntaje = 0;
 	temporizadorCaida = 0;
+	
+	liberarListaReplay(historialReplay);
+	crearListaReplay(historialReplay);
+	
 	generarPiezaNueva();
 }
 
@@ -50,9 +59,14 @@ void Juego::dibujarElementosJuego(){
 	dibujarTresSiguientesPiezas();
 	dibujarPiezaEnHold();
 	dibujarMensajeEvento();
+	dibujarBotonesHistorial();
 }
 
-	
+
+// ayudante para los clicks
+static bool clickEn(Rectangle r){
+	return IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(GetMousePosition(), r);
+}
 	
 // COLA DE EVENTOOS
 void Juego::programarEventosIniciales(){
@@ -67,17 +81,30 @@ void Juego::moverPiezaConTeclado(){
 		return;
 	}
 	
+	if( IsKeyPressed(KEY_Z) || clickEn(btnDeshacer)){
+		deshacerMovimiento();
+		return;
+	}
+	if(IsKeyPressed(KEY_Y) || clickEn(btnRehacer)){
+		rehacerMovimiento();
+		return;
+	}
+	
 	if(IsKeyPressed(KEY_LEFT) && piezaPuedeMoverse(piezaActual, -1, 0, tablero)){
 		piezaActual.x--;
+		registrarMovimiento(historialReplay, MOV_IZQUIERDA, piezaActual, false);
 	}
 	if(IsKeyPressed(KEY_RIGHT) && piezaPuedeMoverse(piezaActual, 1, 0, tablero)){
 		piezaActual.x++;
+		registrarMovimiento(historialReplay, MOV_DERECHA, piezaActual, false);
 	}
 	if(IsKeyPressed(KEY_DOWN) && piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		piezaActual.y++;
+		registrarMovimiento(historialReplay, MOV_BAJAR, piezaActual, false);
 	}
 	if(IsKeyPressed(KEY_UP) && piezaPuedeRotar(piezaActual, tablero)){
 		piezaActual.orientacion = (piezaActual.orientacion + 1) % 4;
+		registrarMovimiento(historialReplay, MOV_ROTAR, piezaActual, false);
 	}
 
 	
@@ -92,6 +119,7 @@ void Juego::moverPiezaConTeclado(){
 			
 			piezaActual = { piezaGuardadaEnHold, 4, 1, 0 };
 			guardarPiezaPila(pilaHold, tipoActual);
+			
 		}
  
 	}
@@ -116,6 +144,8 @@ void Juego::generarPiezaNueva(){
 		
 	}
 	piezaActual = { tipo, 4, 1, 0 };
+	registrarMovimiento(historialReplay, MOV_GENERAR, piezaActual, false);
+	
 	
 }
 	
@@ -129,7 +159,13 @@ void Juego::actualizar(){
 		if(temporizadorLimpieza  >= duracionLimpieza){
 			int lineas = limpiarFilaCompleta(tablero);
 			if(lineas > 0){
-				puntaje += lineas * 100; 
+				
+				int puntosGanados = lineas * 50;
+				
+				if(puntosDoblesActivo){
+					puntosGanados = puntosGanados * 2; // para el evento :p
+				}
+				puntaje += puntosGanados; 
 			}
 			animandoLimpieza = false;
 			if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
@@ -166,9 +202,12 @@ void Juego::actualizar(){
 	if(!piezaPuedeMoverse(piezaActual, 0, 1, tablero)){
 		
 		fijarPiezaEnTablero();
+		int lineasCompletas = marcarFilasCompletas(tablero);
+		// si al colocar una pieza hay match entonces ese movimiento no puede devolverse
+		registrarMovimiento(historialReplay, MOV_COLOCAR, piezaActual, lineasCompletas > 0);
 		generarPiezaNueva();
 		
-		if(marcarFilasCompletas(tablero) > 0){
+		if(lineasCompletas > 0){
 			animandoLimpieza = true;
 			temporizadorLimpieza = 0;
 		}else if(!piezaPuedeMoverse(piezaActual, 0, 0, tablero)){
@@ -189,18 +228,20 @@ void Juego::actualizar(){
 
 
 void Juego::fijarPiezaEnTablero(){
-	Offset bloques[4];
-	obtenerFormaPieza(piezaActual.tipo, piezaActual.orientacion, bloques);
+//	Offset bloques[4];
+//	obtenerFormaPieza(piezaActual.tipo, piezaActual.orientacion, bloques);
+//	
+//	for(int i = 0; i < 4; i++){
+//		int columna = piezaActual.x + bloques[i].dx;
+//		int fila = piezaActual.y + bloques[i].dy;
+//		
+//		Fila* nodoFila = obtenerFila(tablero, fila);
+//		if(nodoFila != nullptr){
+//			nodoFila->celdas[columna] = piezaActual.tipo;
+//		}
+//	}
 	
-	for(int i = 0; i < 4; i++){
-		int columna = piezaActual.x + bloques[i].dx;
-		int fila = piezaActual.y + bloques[i].dy;
-		
-		Fila* nodoFila = obtenerFila(tablero, fila);
-		if(nodoFila != nullptr){
-			nodoFila->celdas[columna] = piezaActual.tipo;
-		}
-	}
+	ponerPiezaEnTablero(tablero, piezaActual);
 }
 
 
@@ -254,7 +295,9 @@ void Juego::aplicarEvento(TipoEvento tipo){
 	}else if(tipo == PUNTOS_DOBLES){
 		puntosDoblesActivo = true;
 		tiempoRestantePuntosDobles = 10.0f;
-		programarEvento(colaEventos, PUNTOS_DOBLES, tiempoJuego + 40.0f);
+		programarEvento(colaEventos, PUNTOS_DOBLES, tiempoJuego + 30.0f);
+		
+		
 		
 	}else if(tipo == PIEZA_FACIL){
 		mostrandoMensajeEvento = true;
@@ -262,7 +305,7 @@ void Juego::aplicarEvento(TipoEvento tipo){
 		tiempoMensajeEvento = duracionMensajeEvento;
 		
 		piezaFacilPendiente = true;
-		programarEvento(colaEventos, PIEZA_FACIL, tiempoJuego + 60.0f);
+		programarEvento(colaEventos, PIEZA_FACIL, tiempoJuego + 40.0f);
 	}
 }
 
@@ -275,13 +318,66 @@ void Juego::dibujarMensajeEvento(){
 		}else{
 			texto = "Pieza facil de regalo!";
 		}
-		DrawText(texto, 450, 50, 30, RED);
+		DrawText(texto, 450, 40, 30, PINK);
 	}
 	
 	if(puntosDoblesActivo){
-		DrawText("Puntos dobles activos!", 450, 50, 30, ORANGE);
+		DrawText("Puntos dobles activos!", 450, 60, 30, ORANGE);
 	}
 }
+
+void Juego::deshacerMovimiento(){
+	NodoReplay* actual = historialReplay.cursor;
+	
+	if(actual == nullptr){
+		return;
+		
+	}
+	
+	if(actual->tipo == MOV_GENERAR){
+	
+		NodoReplay* nodoColocar = actual->anterior;
+		if(nodoColocar == nullptr){ return; }
+		if(nodoColocar->tipo != MOV_COLOCAR){ return; }
+		if(nodoColocar->causoLimpieza){ return; }  // no se revierte una limpieza
+		
+		borrarPiezaDelTablero(tablero, nodoColocar->estadoPieza);
+		piezaActual = nodoColocar->estadoPieza;
+		historialReplay.cursor = nodoColocar->anterior;
+		temporizadorCaida = 0;
+		return;
+	}
+	
+	if(actual->anterior == nullptr){ return; }
+	piezaActual = actual->anterior->estadoPieza;
+	historialReplay.cursor = actual->anterior;
+	temporizadorCaida = 0;
+}
+	
+
+void Juego::rehacerMovimiento(){
+	NodoReplay* siguiente = (historialReplay.cursor == nullptr) ? historialReplay.primero : historialReplay.cursor->siguiente;
+	if(siguiente == nullptr){ return; }
+	// Rehacer solo aplica a movimientos de la pieza que esta cayendo.
+	if(siguiente->tipo == MOV_COLOCAR || siguiente->tipo == MOV_GENERAR){ return; }
+	
+	piezaActual = siguiente->estadoPieza;
+	historialReplay.cursor = siguiente;
+	temporizadorCaida = 0;
+}
+
+ListaReplay& Juego::obtenerHistorial(){
+	return historialReplay;
+}
+
+void Juego::dibujarBotonesHistorial(){
+	DrawRectangleRec(btnDeshacer, PURPLE);
+	DrawText("Deshacer (Z)", (int)btnDeshacer.x + 12, (int)btnDeshacer.y + 13, 18, WHITE);
+	DrawRectangleRec(btnRehacer, PURPLE);
+	DrawText("Rehacer (Y)", (int)btnRehacer.x + 12, (int)btnRehacer.y + 13, 18, WHITE);
+}
+
+
 
 bool Juego::haTerminado(){
 	return juegoTerminado;

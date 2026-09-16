@@ -8,7 +8,7 @@ struct Tablero{
 };
 
 void crearTablero(Tablero &tablero);
-void liberarTablero(Tablero &tablero); // preguntar a la profe
+void liberarTablero(Tablero &tablero); 
 void dibujarTablero(Tablero &tablero);
 
 Fila* obtenerFila(Tablero &tablero, int indice);

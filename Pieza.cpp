@@ -137,3 +137,92 @@ void dibujarPiezaEnPosicion(TipoPieza tipo, int x, int y, int tamCelda){
 		DrawRectangleLinesEx(celda, 1, GRAY);
 	}
 }
+
+	
+	
+void ponerPiezaEnTablero(Tablero &tablero, Pieza pieza){
+	Offset bloques[4];
+	obtenerFormaPieza(pieza.tipo, pieza.orientacion, bloques);
+	for(int i = 0; i < 4; i++){
+		int px = pieza.x + bloques[i].dx;
+		int py = pieza.y + bloques[i].dy;
+		Fila* fila = tablero.primera;
+		int indice = 0;
+		while(fila != nullptr && indice < py){
+			fila = fila->siguiente;
+			indice++;
+		}
+		if(fila != nullptr && px >= 0 && px < 10){
+			fila->celdas[px] = pieza.tipo;
+		}
+	}
+}
+	
+	// pregunta 2 del informee
+void borrarPiezaDelTablero(Tablero &tablero, Pieza pieza){
+	Offset bloques[4];
+	obtenerFormaPieza(pieza.tipo, pieza.orientacion, bloques);
+	for(int i = 0; i < 4; i++){
+		int px = pieza.x + bloques[i].dx;
+		int py = pieza.y + bloques[i].dy;
+		Fila* fila = tablero.primera;
+		int indice = 0;
+		while(fila != nullptr && indice < py){
+			fila = fila->siguiente;
+			indice++;
+		}
+		if(fila != nullptr && px >= 0 && px < 10){
+		fila->celdas[px] = NINGUNA;
+		}
+	}	
+}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

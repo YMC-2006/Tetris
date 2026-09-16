@@ -6,6 +6,8 @@
 #include "ColaPiezas.h"
 #include "PilaHold.h"
 #include "ColaEventos.h"
+#include "ListaReplay.h"
+
 class Juego{
 	
 public:
@@ -19,11 +21,13 @@ public:
 	bool haTerminado();
 	void reiniciar();
 	void pausar();
+	ListaReplay& obtenerHistorial();
 	
 private:
 	Tablero tablero;
 	PilaHold pilaHold;
 	ColaPiezas colaPiezas;
+	ListaReplay historialReplay;
 	Pieza piezaActual;
 	
 	Rectangle btnPausa;
@@ -32,6 +36,9 @@ private:
 	const float intervaloCaidaRapida = 0.5f; // en veremos
 	int puntaje = 0;
 	bool juegoTerminado = false;
+	
+	Rectangle btnDeshacer;
+	Rectangle btnRehacer;
 	
 	
 	// eventos especiales cola
@@ -61,6 +68,11 @@ private:
 	void fijarPiezaEnTablero();
 	void dibujarTresSiguientesPiezas();
 	void dibujarPiezaEnHold();
+	
+	
+	void deshacerMovimiento();
+	void rehacerMovimiento();
+	void dibujarBotonesHistorial();
 	
 };
 #endif

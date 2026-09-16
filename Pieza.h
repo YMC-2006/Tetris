@@ -19,5 +19,11 @@
 	bool posicionValida(int columna, int fila);
 	void dibujarPiezaEnPosicion(TipoPieza tipo, int x, int y, int tamCelda);
 	
+	// funciones para el replay
+	void ponerPiezaEnTablero(Tablero &tablero, Pieza pieza);
+	void borrarPiezaDelTablero(Tablero &tablero, Pieza pieza);
+	
+	
+	
 	
 	#endif

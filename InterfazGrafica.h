@@ -36,6 +36,22 @@ private:
 	bool musicaActiva = false;
 	bool juegoPausado = false;
 	
+	
+	
+	// REPLAY
+	Tablero tableroReplay;
+	int pasoReplay;
+	int totalPasosReplay;
+	Rectangle btnVerReplay;
+	Rectangle btnReplayAtras;
+	Rectangle btnReplayAdelante;
+	Rectangle btnReplayRepetir;
+	Rectangle btnReplayVolver;
+	
+	void mostrarReplay();
+	void reconstruirReplay(int hastaPaso);
+	int contarColocaciones();	
+	
 	void cargarAssets();
 	void liberarAssets();
 	

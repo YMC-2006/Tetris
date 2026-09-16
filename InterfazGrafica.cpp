@@ -11,6 +11,18 @@ InterfazGrafica::InterfazGrafica(int ancho, int alto,const  char* titulo){
 	InitAudioDevice();
 	cargarAssets();
 	musica.looping = true;
+	
+	
+	
+	// PARA EL REPLAY
+	crearTablero(tableroReplay);
+	pasoReplay = 0;
+	totalPasosReplay = 0;
+	btnVerReplay       = { 400, 500, 250, 60 };
+	btnReplayAtras     = { 900, 300, 180, 50 };
+	btnReplayAdelante  = { 320, 700, 180, 50 };
+	btnReplayRepetir   = { 520, 700, 180, 50 };
+	btnReplayVolver    = { 720, 700, 180, 50 };
 }
 
 InterfazGrafica::~InterfazGrafica(){
@@ -51,6 +63,8 @@ void InterfazGrafica::liberarAssets(){
 	
 	//liberar btns
 	UnloadTexture(btnHogar);
+	
+	liberarTablero(tableroReplay);
 	
 	UnloadTexture(fondoFinJuego);
 }
@@ -116,6 +130,18 @@ void InterfazGrafica::mostrarFinJuego(){
 	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), btnJugarRect)){
 		juego.reiniciar();
 		pantallaActual = JUEGO;
+	}
+	
+	// para el replay
+	DrawRectangleRec(btnVerReplay, LIGHTGRAY);
+	DrawText("Ver replay", (int)btnVerReplay.x + 45, (int)btnVerReplay.y + 18, 25, BLACK);
+	
+	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
+	   CheckCollisionPointRec(GetMousePosition(), btnVerReplay)){
+		totalPasosReplay = contarColocaciones();
+		pasoReplay = 0;
+		reconstruirReplay(0);
+		pantallaActual = REPLAY;
 	}
 }
 
@@ -491,6 +517,8 @@ void InterfazGrafica::ejecutar(){
 					mostrarFinJuego(); 
 				}else if(pantallaActual == REGLAS_JUEGO){
 					mostrarReglasJuego();
+				}else if(pantallaActual == REPLAY){
+					mostrarReplay();
 				}
 				EndDrawing();
 			}
@@ -516,6 +544,107 @@ void copiarArreglo(Jugador origen[], Jugador destino[], int cantidad){
 		destino[i] = origen[i];
 	}
 }
+	
+	
+	
+int InterfazGrafica::contarColocaciones(){
+	int total = 0;
+	NodoReplay* actual = juego.obtenerHistorial().primero;
+	// lo importante es recorrer el historial y contar cuando colocamos un pieza
+	while(actual != nullptr){
+		if(actual->tipo == MOV_COLOCAR){
+			total++; 
+		}
+		actual = actual->siguiente;
+	}
+	return total;
+}
+
+// para reiniciar el replay
+void InterfazGrafica::reconstruirReplay(int hastaPaso){
+	liberarTablero(tableroReplay);
+	crearTablero(tableroReplay);
+	
+	int colocadas = 0;
+	NodoReplay* actual = juego.obtenerHistorial().primero;
+	while(actual != nullptr && colocadas < hastaPaso){
+		if(actual->tipo == MOV_COLOCAR){
+			ponerPiezaEnTablero(tableroReplay, actual->estadoPieza);
+			limpiarFilaCompleta(tableroReplay);
+			colocadas++;
+		}
+		actual = actual->siguiente;
+	}
+}
+	
+void InterfazGrafica::mostrarReplay(){
+	DrawText("REPLAY", 460, 30, 45, PINK);
+	dibujarTablero(tableroReplay);
+	DrawText(TextFormat("Pieza %d de %d", pasoReplay, totalPasosReplay), 100, 120, 25, BLACK);
+	
+	DrawRectangleRec(btnReplayAtras, LIGHTGRAY);
+	DrawText("<< Atras", (int)btnReplayAtras.x + 35, (int)btnReplayAtras.y + 15, 20, BLACK);
+	DrawRectangleRec(btnReplayAdelante, LIGHTGRAY);
+	DrawText("Adelante >>", (int)btnReplayAdelante.x + 20, (int)btnReplayAdelante.y + 15, 20, BLACK);
+	DrawRectangleRec(btnReplayRepetir, LIGHTGRAY);
+	DrawText("Repetir", (int)btnReplayRepetir.x + 45, (int)btnReplayRepetir.y + 15, 20, BLACK);
+	DrawRectangleRec(btnReplayVolver, LIGHTGRAY);
+	DrawText("Volver", (int)btnReplayVolver.x + 50, (int)btnReplayVolver.y + 15, 20, BLACK);
+		
+	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+		Vector2 mouse = GetMousePosition();
+		if(CheckCollisionPointRec(mouse, btnReplayAdelante) && pasoReplay < totalPasosReplay){
+			pasoReplay++;
+			reconstruirReplay(pasoReplay);
+		}
+		if(CheckCollisionPointRec(mouse, btnReplayAtras) && pasoReplay > 0){
+			pasoReplay--;
+			reconstruirReplay(pasoReplay);
+		}
+		if(CheckCollisionPointRec(mouse, btnReplayRepetir)){
+			pasoReplay = 0;
+			reconstruirReplay(pasoReplay);
+		}
+		if(CheckCollisionPointRec(mouse, btnReplayVolver)){
+			pantallaActual = FIN_JUEGO;
+		}
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		
 void InterfazGrafica::compararOrdenamientos(){
 	int tamanos[] = {10, 100, 1000, 10000};

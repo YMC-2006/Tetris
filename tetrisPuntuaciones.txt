@@ -1,5 +1,7 @@
-asd 700
-jj 200
-Yui 100
-fgd 0
-lk 0
+Yuli 1000
+asd 0
+yuli 100
+yuli 0
+ssdf 0
+dsf 0
+yuli 0
