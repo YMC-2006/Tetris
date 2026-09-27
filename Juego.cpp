@@ -337,9 +337,15 @@ void Juego::deshacerMovimiento(){
 	if(actual->tipo == MOV_GENERAR){
 	
 		NodoReplay* nodoColocar = actual->anterior;
-		if(nodoColocar == nullptr){ return; }
-		if(nodoColocar->tipo != MOV_COLOCAR){ return; }
-		if(nodoColocar->causoLimpieza){ return; }  // no se revierte una limpieza
+		if(nodoColocar == nullptr){
+			return; 
+		}
+		if(nodoColocar->tipo != MOV_COLOCAR){
+			return; 
+		}
+		if(nodoColocar->causoLimpieza){
+			return; 
+		}  // no se revierte una limpieza
 		
 		borrarPiezaDelTablero(tablero, nodoColocar->estadoPieza);
 		piezaActual = nodoColocar->estadoPieza;
@@ -348,7 +354,9 @@ void Juego::deshacerMovimiento(){
 		return;
 	}
 	
-	if(actual->anterior == nullptr){ return; }
+	if(actual->anterior == nullptr){
+		return; 
+	}
 	piezaActual = actual->anterior->estadoPieza;
 	historialReplay.cursor = actual->anterior;
 	temporizadorCaida = 0;
@@ -357,9 +365,13 @@ void Juego::deshacerMovimiento(){
 
 void Juego::rehacerMovimiento(){
 	NodoReplay* siguiente = (historialReplay.cursor == nullptr) ? historialReplay.primero : historialReplay.cursor->siguiente;
-	if(siguiente == nullptr){ return; }
+	if(siguiente == nullptr){
+		return; 
+	}
 	// Rehacer solo aplica a movimientos de la pieza que esta cayendo.
-	if(siguiente->tipo == MOV_COLOCAR || siguiente->tipo == MOV_GENERAR){ return; }
+	if(siguiente->tipo == MOV_COLOCAR || siguiente->tipo == MOV_GENERAR){
+		return; 
+	}
 	
 	piezaActual = siguiente->estadoPieza;
 	historialReplay.cursor = siguiente;

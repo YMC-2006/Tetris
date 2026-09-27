@@ -21,7 +21,7 @@ void liberarListaReplay(ListaReplay &lista){
 }
 
 	
-// FUNCION POR VER
+
 void registrarMovimiento(ListaReplay &lista, TipoMovimiento tipo, Pieza estado, bool causoLimpieza){
 	// si el cursor no está al final, se perdió el "futuro" o sea lo que se había deshecho
 	if(lista.cursor != lista.ultimo){

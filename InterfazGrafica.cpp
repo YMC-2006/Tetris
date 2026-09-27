@@ -48,7 +48,9 @@ void InterfazGrafica::cargarAssets(){
 	btnReplay = LoadTexture("assets/btnVerReplay.png");
 	//btnMusicaON = LoadTexture("assets/musicaON.png");
 	
-	
+	imagenPiezaHoldVacida = LoadTexture("assets/imagenPiezaHoldVacida.png");
+	imagenPiezaHoldLlena = LoadTexture("assets/imagenPiezaHoldLlena.png");
+		
 	musica = LoadMusicStream("assets/FrozenPines.wav");
 	compararOrdenamientos();
 }
@@ -68,6 +70,8 @@ void InterfazGrafica::liberarAssets(){
 	liberarTablero(tableroReplay);
 	
 	UnloadTexture(fondoFinJuego);
+	UnloadTexture(imagenPiezaHoldVacida);
+	UnloadTexture(imagenPiezaHoldLlena);
 }
 	
 
@@ -112,13 +116,13 @@ void InterfazGrafica::mostrarFinJuego(){
 	DrawTexture(fondoFinJuego, 0, 0, WHITE);
 	DrawText(TextFormat("%d",juego.obtenerPuntaje()), anchoPantalla/2 - 130, 700, 45, BLACK);
 	
-	// tamaño y posición para el botón
+	// tamaño y pos para el botón
 	Rectangle btnHogarRect = { 600, 840, 100, 80 }; // x, y, ancho, alto
 	Rectangle origenHogar = { 0, 0, (float)btnHogar.width, (float)btnHogar.height };
 	DrawTexturePro(btnHogar, origenHogar, btnHogarRect, {0, 0}, 0.0f, WHITE);
 	
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), btnHogarRect)) {
-		pantallaActual = MENU; // o la pantalla que corresponda para "ir al hogar"
+		pantallaActual = MENU;
 		juego.reiniciar();
 	}
 	
@@ -133,15 +137,11 @@ void InterfazGrafica::mostrarFinJuego(){
 		pantallaActual = JUEGO;
 	}
 	
-	Rectangle btnReplayRect = {900, 840, 100, 80};
+	Rectangle btnReplayRect = {870, 840, 100, 80};
 	Rectangle origenReplay = {0, 0, (float)btnReplay.width, (float)btnReplay.height};
 	DrawTexturePro(btnReplay, origenReplay, btnReplayRect, {0,0}, 0.0f, WHITE);
 		
-	
-	// para el replay
-//	DrawRectangleRec(btnVerReplay, LIGHTGRAY);
-//	DrawText("Ver replay", (int)btnVerReplay.x + 45, (int)btnVerReplay.y + 18, 25, BLACK);
-//	
+
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
 	   CheckCollisionPointRec(GetMousePosition(), btnReplayRect)){
 		totalPasosReplay = contarColocaciones();
@@ -273,6 +273,7 @@ void InterfazGrafica::mostrarMenu(){
 }
 	
 void InterfazGrafica::regresarAlMenu(){
+	
 	Rectangle btnRegresar = {300, 200, 20, 20};
 	DrawRectangleRec(btnRegresar, BLUE);
 	Vector2 mouse = GetMousePosition();
@@ -490,7 +491,27 @@ void InterfazGrafica::mostrarJuego(){
 
 void InterfazGrafica::mostrarReglasJuego(){
 	regresarAlMenu();
-	DrawText("Creditos", 500, 50, 40, BLUE);
+	DrawText("Reglas del Juego", 500, 50, 40, PINK);
+	DrawText("Para jugar al Tetris, debes encajar piezas geometricas que caen desde la parte superior de la pantalla para", 100, 120, 20, BLACK);
+	DrawText("formar lineas horizontales completas sin dejar huecos. ", 100, 150, 20, BLACK);
+	
+	// dibujar las 7 piezas
+	DrawText("El juego tiene 7 piezas: ", 500, 250, 30, PINK);
+	dibujarPiezaEnPosicion(O,170,400, 50);
+	dibujarPiezaEnPosicion(I,370,400, 50);
+	dibujarPiezaEnPosicion(L,600,400, 50);
+	dibujarPiezaEnPosicion(J,800,400, 50);
+	dibujarPiezaEnPosicion(S,1000,400,50);
+	dibujarPiezaEnPosicion(Z,1200,400, 50);
+	
+	
+	DrawText("Presione la tecla h para \n poner una pieza en hold ", 200, 540, 30, PINK);
+	DrawTexture(imagenPiezaHoldVacida, 50, 640, WHITE);
+	DrawTexture(imagenPiezaHoldLlena, 420, 640, WHITE);
+	
+	DrawText("Presione la flecha hacia arriba \npara girar una pieza!!!", 850, 540, 30, PURPLE);
+	
+	DrawText("El juego tiene 3 eventos que aparecen\n cada cierta cantidad de tiempo ", 50, 800, 30, SKYBLUE);
 }
 
 
@@ -593,8 +614,7 @@ void InterfazGrafica::mostrarReplay(){
 	DrawText("REPLAY", 600, 30, 50, PINK);
 	dibujarTablero(tableroReplay);
 	DrawText(TextFormat("Pieza %d de %d", pasoReplay, totalPasosReplay), 100, 120, 25, BLACK);
-	//DrawText(TextFormat("Num pieza %", pasoReplay), 200, 130, 24, BLACK);
-	
+
 	DrawRectangleRec(btnReplayAtras, colorRosadoOsc);
 	DrawText("<< Atras", (int)btnReplayAtras.x + 35, (int)btnReplayAtras.y + 15, 20, WHITE);
 	DrawRectangleRec(btnReplayAdelante, colorVerdeClaro);

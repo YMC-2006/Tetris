@@ -22,6 +22,8 @@ private:
 	Texture2D fondoPausa;
 	Texture2D fondoFinJuego;
 	Texture2D fondoElegirOrdenamientos;
+	Texture2D imagenPiezaHoldVacida;
+	Texture2D imagenPiezaHoldLlena;
 	
 	bool ordenamientoSimple = false;
 	

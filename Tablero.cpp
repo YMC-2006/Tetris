@@ -167,6 +167,7 @@ int limpiarFilaCompleta(Tablero &tablero){
 	return cantFilasEliminadas;
 }
 	
+	
 int marcarFilasCompletas(Tablero &tablero){
 	int contador = 0;
 	Fila* filaActual = tablero.primera;
