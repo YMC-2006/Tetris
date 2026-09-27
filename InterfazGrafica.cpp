@@ -272,10 +272,10 @@ void InterfazGrafica::mostrarMenu(){
 	DrawText("Reglas Juego", 640, 820, 25, WHITE);
 }
 	
-void InterfazGrafica::regresarAlMenu(){
-	
-	Rectangle btnRegresar = {300, 200, 20, 20};
-	DrawRectangleRec(btnRegresar, BLUE);
+void InterfazGrafica::regresarAlMenu(){	
+	Rectangle btnRegresar = {50, 50, 60, 40};
+	DrawRectangleRec(btnRegresar, PINK);
+	DrawText("<--", 55, 55, 30, WHITE);
 	Vector2 mouse = GetMousePosition();
 	if(CheckCollisionPointRec(mouse, btnRegresar) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 		TraceLog(LOG_INFO, "Regresando al menu...");
@@ -509,9 +509,13 @@ void InterfazGrafica::mostrarReglasJuego(){
 	DrawTexture(imagenPiezaHoldVacida, 50, 640, WHITE);
 	DrawTexture(imagenPiezaHoldLlena, 420, 640, WHITE);
 	
-	DrawText("Presione la flecha hacia arriba \npara girar una pieza!!!", 850, 540, 30, PURPLE);
+	DrawText("Puedes presionar la flecha hacia \narriba para girar una pieza", 850, 540, 30, PURPLE);
+	DrawText("Las teclas <-- --> las puedes usar\npara mover hacia la izquierda o\nderecha la piza", 850, 660, 30, PINK);
 	
-	DrawText("El juego tiene 3 eventos que aparecen\n cada cierta cantidad de tiempo ", 50, 800, 30, SKYBLUE);
+	DrawText("El juego tiene 3 eventos que aparecen cada cierta cantidad de tiempo ", 110, 900, 35, SKYBLUE);
+	DrawText("Evento 1: Aumentar velocidad", 140, 970, 25, BLACK);
+	DrawText("Evento 2: Puntos Dobles", 600, 970, 25, BLACK);
+	DrawText("Evento 3: Pieza Regalo (T)", 1000, 970, 25, BLACK);
 }
 
 

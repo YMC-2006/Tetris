@@ -41,6 +41,7 @@ private:
 	Rectangle btnRehacer;
 	
 	
+	
 	// eventos especiales cola
 	ColaEventos colaEventos;
 	float tiempoJuego = 0;

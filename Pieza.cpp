@@ -138,6 +138,7 @@ void dibujarPiezaEnPosicion(TipoPieza tipo, int x, int y, int tamCelda){
 	}
 }
 
+
 	
 	
 void ponerPiezaEnTablero(Tablero &tablero, Pieza pieza){
