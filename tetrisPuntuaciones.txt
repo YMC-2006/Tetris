@@ -2,3 +2,5 @@ yuli 300
 h 0
 a 0
 asd 150
+aada 0
+dsf 0

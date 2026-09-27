@@ -245,15 +245,6 @@ void Juego::fijarPiezaEnTablero(){
 }
 
 
-void Juego::pausar(){
-	btnPausa = {100, 100, 50, 20};
-	DrawRectangleRec(btnPausa, RED);
-	Vector2 mouse = GetMousePosition();
-	if(CheckCollisionPointRec(mouse, btnPausa) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-		TraceLog(LOG_INFO, "SE PAUSO EL JUEGO");
-		
-	}
-}
 
 
 void Juego::dibujarTresSiguientesPiezas(){

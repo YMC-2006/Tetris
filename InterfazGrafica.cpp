@@ -200,7 +200,7 @@ void InterfazGrafica::mostrarMenu(){
 	Rectangle btnCreditos = {605, 600, 250, 60};
 	Rectangle btnMejoresPts = {540, 700, 380, 60};
 	Rectangle btnReglas = {590, 800, 270, 60};
-	Rectangle btnSonidoOn = {100, 100, 30, 30};
+	Rectangle btnSonidoOn = {100, 100, 80, 30};
 		
 	Vector2 mouse = GetMousePosition();
 	if(CheckCollisionPointRec(mouse, btnJugar) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -235,10 +235,14 @@ void InterfazGrafica::mostrarMenu(){
 	}
 		
 	if(musicaActiva){
-		DrawRectangleRec(btnSonidoOn, DARKBLUE);
+		DrawRectangleRec(btnSonidoOn, PINK);
+		
+		
 	}else{
-		DrawRectangleRec(btnSonidoOn, BLUE);
+		DrawRectangleRec(btnSonidoOn, PURPLE);
 	}
+	
+	DrawText("Musica", 105, 105, 20, WHITE);
 		
 	// Hover JUGAR
 	if (CheckCollisionPointRec(mouse, btnJugar)){
@@ -456,8 +460,9 @@ void InterfazGrafica::mostrarJuego(){
 	
 	DrawTexture(fondoJuego, 0, 0, WHITE);
 	
-	Rectangle btnPausa = {100, 100, 50, 20};
-	DrawRectangleRec(btnPausa, RED);
+	Rectangle btnPausa = {50, 100, 120, 40};
+	DrawRectangleRec(btnPausa, PINK);
+	DrawText("Pausar", 55, 105, 30, WHITE);
 	Vector2 mouse = GetMousePosition();
 	
 	if(CheckCollisionPointRec(mouse, btnPausa) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
