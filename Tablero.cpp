@@ -124,15 +124,11 @@ int limpiarFilaCompleta(Tablero &tablero){
 	
 	Fila* filaActual = tablero.primera;
 	Fila* anterior = nullptr;
-	
 	int cantFilasEliminadas = 0;
 	
 	while(filaActual != nullptr){
-		
-		
 		if(filaEstaCompleta(filaActual)){
 			Fila* siguienteFila = filaActual->siguiente;
-			
 			
 			if(anterior == nullptr){
 				tablero.primera = siguienteFila;
@@ -149,7 +145,6 @@ int limpiarFilaCompleta(Tablero &tablero){
 			}
 			
 			filaVacida->marcada = false;
-			
 			filaVacida->siguiente = tablero.primera;
 			tablero.primera = filaVacida;
 			
@@ -159,9 +154,6 @@ int limpiarFilaCompleta(Tablero &tablero){
 			anterior = filaActual;
 			filaActual = filaActual->siguiente;
 		}
-
-		
-		
 	}
 	
 	return cantFilasEliminadas;

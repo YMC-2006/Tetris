@@ -4,3 +4,4 @@ a 0
 asd 150
 aada 0
 dsf 0
+asd 0
