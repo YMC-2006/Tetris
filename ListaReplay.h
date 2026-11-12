@@ -12,5 +12,4 @@ void crearListaReplay(ListaReplay &lista);
 void liberarListaReplay(ListaReplay &lista);
 void registrarMovimiento(ListaReplay &lista, TipoMovimiento tipo, Pieza estado, bool causoLimpieza);
 
-
 #endif

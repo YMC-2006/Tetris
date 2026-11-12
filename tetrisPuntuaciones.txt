@@ -1,7 +1,7 @@
-yuli 300
-h 0
-a 0
-asd 150
-aada 0
-dsf 0
-asd 0
+Yuliana 1000
+Melani 800
+Maruja 500
+Marcos 300
+Saray 100
+Pedro 10
+Juan 0
